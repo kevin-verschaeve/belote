@@ -80,7 +80,7 @@
         });
     }
 
-    function restart(gameRef) {
+    function restart() {
         db.collection(`games/${gameId}/players`).get().then((snapshot) => {
             const players = snapshot.docs.map((p) => {return {...p.data(), ...{ref: p.ref}};});
             const deck = dealPreGame(players);
