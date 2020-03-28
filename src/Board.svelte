@@ -104,7 +104,7 @@
 </script>
 
 <div id="board">
-    {#if game.dealComplete}
+    {#if game && game.dealComplete}
         {#if game.atout}
         <div>
             <h2 id="atout-indicator">

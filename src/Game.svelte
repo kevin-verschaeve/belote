@@ -50,11 +50,8 @@
                 <div class="player-cards">
                     {#each sortCards(player.cards) as card}
                         <div class="card-wrapper">
-                            {#if card.discovered || (me == player.name)}
-                                <div class="card playable" on:click={play(player, card)}>
-                                    <div class="value">{card.value}</div>
-                                    <div class="suit {card.suit}"></div>
-                                </div>
+                            {#if me == player.name}
+                                <Card {card} playable={true} on:click={play(player, card)} />
                             {:else}
                                 <div class="card card-hidden"></div>
                             {/if}
