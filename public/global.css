@@ -1,0 +1,193 @@
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	color: #333;
+	margin: 0;
+	padding: 10px 50px;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+a {
+	color: rgb(0,100,200);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: rgb(0,80,160);
+}
+
+label {
+	display: block;
+}
+
+input, button, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	padding: 0.4em;
+	margin: 0 0 0.5em 0;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+
+input:disabled {
+	color: #ccc;
+}
+
+input[type="range"] {
+	height: 0;
+}
+
+button {
+	color: #333;
+	background-color: #f4f4f4;
+	outline: none;
+}
+
+button:disabled {
+	color: #999;
+}
+
+button:not(:disabled):active {
+	background-color: #ddd;
+}
+
+button:focus {
+	border-color: #666;
+}
+
+#app-name {
+	text-align: center;
+}
+
+#app-name a {
+	color: #333;
+}
+
+#app-name a:hover {
+	text-decoration: none;
+}
+
+.player-cards {
+	display: inline-flex;
+}
+
+.plis {
+	display: flex;
+}
+
+#atout-indicator,
+#suits-two {
+	display: inline-flex;
+    align-items: center;
+}
+
+.card {
+	position: relative;
+	border: solid 1px #aaa;
+	border-radius: 9px;
+	width: 50px;
+	height: 85px;
+	background: #FFF;
+	padding: 3px 3px 3px 3px;
+	margin-right: 10px;
+}
+.card.mini {
+	margin-left: 20px;
+	width: 45px;
+	height: auto;
+}
+
+.card.card-hidden {
+	background: url(back.jpg);
+}
+
+.card .value {
+	font-size: 15pt;
+	font-family: sans-serif;
+}
+
+.card .suit {
+	background-image: url(suits.png);
+	height: 50px;
+	width: 45px;
+}
+
+.card .hearts {
+	background-position-x: 145px;
+}
+
+.card .diamonds {
+	background-position-y: 150px;
+}
+
+.card .clubs {
+	background-position-x: 145px;
+	background-position-y: 150px;
+}
+
+.card .spades {
+	background-position-x: 2px;
+	background-position-y: 100px;
+}
+
+#game {
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+.card.playable {
+	cursor: pointer;
+}
+
+.card.playable:hover,
+.btn-cancel-card:hover {
+	box-shadow: 2px 3px 4px #000;
+}
+
+.selected-atout {
+	background: green;
+	padding: 6px;
+}
+
+.player-wrap {
+	padding: 10px;
+	margin-bottom: 10px;
+	border-radius: 10px;
+}
+
+.player-wrap p {
+	margin: 0 0 10px 0;
+}
+
+.player-wrap.NS {
+	background: #F2F2F2;
+}
+
+.player-wrap.EW {
+	background: #b2b2b2;
+}
+
+.cancel-card {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+}
+
+.btn-cancel-card {
+	padding: 3px 6px;
+	background: #FFF;
+	border-radius: 50%;
+	cursor: pointer;
+	border-color: #F00;
+}
