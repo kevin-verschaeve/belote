@@ -1,10 +1,10 @@
 <script>
-    import { Doc } from "sveltefire";
     import { getContext } from 'svelte';
     import { getOneCard, getPlayerCards, suits } from './DeckManager.js';
     import { push } from 'svelte-spa-router';
+    import { onMount } from 'svelte';
     import { dealPreGame } from './GameManager.js';
-    import Card from "./Card.svelte";
+    import Card from './Card.svelte';
     export let gameId;
 
     const firebase = getContext('firebase');
@@ -13,22 +13,21 @@
     let atout;
     let game;
     let players;
-    let play = false;
     let card;
     let me = localStorage.getItem('me');
-    db.doc(`games/${gameId}`).onSnapshot((doc) => {
-        game = doc.data();
+    onMount(() => {
+        db.doc(`games/${gameId}`).onSnapshot((doc) => {
+            game = doc.data();
 
-        if (game.dealComplete) {
-            play = true;
-        } else {
-            db.collection(`games/${gameId}/players`).get().then((snapshot) => {
-                players = snapshot.docs.map((d) => {
-                    return {...d.data(), ...{id: d.id}}
+            if (!game.dealComplete) {
+                db.collection(`games/${gameId}/players`).get().then((snapshot) => {
+                    players = snapshot.docs.map((d) => {
+                        return {...d.data(), ...{id: d.id}}
+                    });
+                    card = getOneCard(game.deck);
                 });
-                card = getOneCard(game.deck);
-            });
-        }
+            }
+        });
     });
 
     const setTaker = (taker, card) => {
@@ -105,42 +104,40 @@
 </script>
 
 <div id="board">
-    {#if play}
-        <Doc path={`games/${gameId}`} let:data={g} let:ref={gRef}>
-            {#if game.atout}
-            <div>
-                <h2 id="atout-indicator">
-                    <span>{game.taker} :</span>
-                    <div class="card mini">
-                        <div class="suit {game.atout}"></div>
-                    </div>
-                </h2>
-                <div>
-                    <div>
-                        <button on:click={getLastPliNS}>Dernier plis NS</button>
-                        <button on:click={getLastPliEW}>Dernier plis EW</button>
-                    </div>
-                    {#if lastPli}
-                        <div class="player-cards">
-                            {#each lastPli as card}
-                                <Card {card}/>
-                            {/each}
-                        </div>
-                        <button on:click={() => {lastPli = null}}>OK !</button>
-                    {/if}
+    {#if game.dealComplete}
+        {#if game.atout}
+        <div>
+            <h2 id="atout-indicator">
+                <span>{game.taker} :</span>
+                <div class="card mini">
+                    <div class="suit {game.atout}"></div>
                 </div>
-            </div>
-            {/if}
-            {#each g.board as card}
-                <Card {card}>
-                    <div slot="cancel" class="cancel-card">
-                    {#if me == card.player}
-                        <button on:click={cancelCard(card)} class="btn-cancel-card" title="Reprendre la carte">&times;</button>
-                    {/if}
+            </h2>
+            <div>
+                <div>
+                    <button on:click={getLastPliNS}>Dernier plis NS</button>
+                    <button on:click={getLastPliEW}>Dernier plis EW</button>
+                </div>
+                {#if lastPli}
+                    <div class="player-cards">
+                        {#each lastPli as card}
+                            <Card {card}/>
+                        {/each}
                     </div>
-                </Card>
-            {/each}
-        </Doc>
+                    <button on:click={() => {lastPli = null}}>OK !</button>
+                {/if}
+            </div>
+        </div>
+        {/if}
+        {#each game.board as card}
+            <Card {card}>
+                <div slot="cancel" class="cancel-card">
+                {#if me == card.player}
+                    <button on:click={cancelCard(card)} class="btn-cancel-card" title="Reprendre la carte">&times;</button>
+                {/if}
+                </div>
+            </Card>
+        {/each}
         {#if game.toPick}
         <div>
             <button on:click={pickUpNS}>Nord - Sud</button>
