@@ -53,7 +53,15 @@
             let plis = doc.data()[team] || [];
             plis.push(JSON.stringify(currentBoard));
 
-            db.doc(`games/${gameId}`).update({[team]: plis, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false});
+            db.doc(`games/${gameId}`).update({[team]: plis, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
+                db.collection(`games/${gameId}/players`).get().then((snapshot) => {
+                    let batch = db.batch();
+                    snapshot.forEach((doc) => {
+                        batch.update(doc.ref, {canPlay: true});
+                    });
+                    batch.commit();
+                });
+            });
         });
     };
 
@@ -69,7 +77,7 @@
             const cards = player.data().cards;
             cards.push(card);
 
-            player.ref.update({cards}).then(() => {
+            player.ref.update({cards: cards, canPlay: true}).then(() => {
                 db.doc(`games/${gameId}`).get().then((doc) => {
                     let board = doc.data().board;
                     const index = board.findIndex((c) => c.suit == card.suit && c.value == card.value);

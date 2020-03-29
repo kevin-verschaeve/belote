@@ -9,7 +9,7 @@
     let name = '';
 
     const addPlayer = (playersRef) => {
-        playersRef.add({name});
+        playersRef.add({name: name, canPlay: true});
         name = '';
     };
 

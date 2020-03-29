@@ -19,8 +19,12 @@
     };
 
     const play = (player, card) => {
+        if (!player.canPlay) {
+            return;
+        }
+
         const index = player.cards.findIndex((c) => c.suit == card.suit && c.value == card.value);
-        player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)]}).then(() => {
+        player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false}).then(() => {
             db.doc(`games/${params.game}`).get().then((doc) => {
                 const board = doc.data().board;
                 board.push(card);
@@ -51,7 +55,7 @@
                     {#each sortCards(player.cards) as card}
                         <div class="card-wrapper">
                             {#if me == player.name}
-                                <Card {card} playable={true} on:click={play(player, card)} />
+                                <Card {card} playable={player.canPlay} on:click={play(player, card)} />
                             {:else}
                                 <div class="card card-hidden"></div>
                             {/if}
