@@ -137,15 +137,18 @@
             </div>
         </div>
         {/if}
-        {#each game.board as card}
-            <Card {card}>
-                <div slot="cancel" class="cancel-card">
-                {#if me == card.player}
-                    <button on:click={cancelCard(card)} class="btn-cancel-card" title="Reprendre la carte">&times;</button>
-                {/if}
-                </div>
-            </Card>
-        {/each}
+            <div class="player-cards">
+            {#each game.board as card}
+                    <Card {card}>
+                        <p class="played-card-player">{card.player}</p>
+                        <div slot="cancel" class="cancel-card">
+                        {#if me == card.player}
+                            <button on:click={cancelCard(card)} class="btn-cancel-card" title="Reprendre la carte">&times;</button>
+                        {/if}
+                        </div>
+                    </Card>
+            {/each}
+            </div>
         {#if game.toPick}
         <div>
             <button on:click={pickUpNS}>Nord - Sud</button>
