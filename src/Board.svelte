@@ -3,7 +3,7 @@
     import { getOneCard, getPlayerCards, suits } from './DeckManager.js';
     import { push } from 'svelte-spa-router';
     import { onMount } from 'svelte';
-    import { dealPreGame } from './GameManager.js';
+    import { dealPreGame, countPointsInPli } from './GameManager.js';
     import Card from './Card.svelte';
     export let gameId;
 
@@ -53,7 +53,10 @@
             let plis = doc.data()[team] || [];
             plis.push(JSON.stringify(currentBoard));
 
-            db.doc(`games/${gameId}`).update({[team]: plis, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
+            const scoreKey = 'roundScore'+team;
+            const points = countPointsInPli(currentBoard, doc.data().atout, doc.data().nbPlis == 7);
+
+            db.doc(`games/${gameId}`).update({[team]: plis, [scoreKey]: doc.data()[scoreKey] + points, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
                 db.collection(`games/${gameId}/players`).get().then((snapshot) => {
                     let batch = db.batch();
                     snapshot.forEach((doc) => {
@@ -113,6 +116,10 @@
 
 <div id="board">
     {#if game && game.dealComplete}
+        <div id="scores">
+            <div id="roundScore">NS : {game.roundScoreNS} / EW : {game.roundScoreEW}</div>
+            <div id="globalScore">NS : {game.scoreNS} / EW : {game.scoreEW}</div>
+        </div>
         {#if game.atout}
         <div>
             <h2 id="atout-indicator">

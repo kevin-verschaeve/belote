@@ -9,7 +9,7 @@
 
 <div class="card" class:playable on:click>
     <slot name="cancel"></slot>
-    <div class="value">{card.value}</div>
+    <div class="value">{card.text}</div>
     <div class="suit {card.suit}"></div>
     <slot></slot>
 </div>

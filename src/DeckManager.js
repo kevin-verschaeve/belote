@@ -1,13 +1,22 @@
 export const suits = ["spades", "diamonds", "clubs", "hearts"];
-const values = ["A", "7", "8", "9", "10", "J", "Q", "K"];
+const symbols = [
+  {value: 0, text: '7'},
+  {value: 0, text: '8'},
+  {value: 0, text: '9'},
+  {value: 2, text: 'J'},
+  {value: 3, text: 'Q'},
+  {value: 4, text: 'K'},
+  {value: 10, text: '10'},
+  {value: 11, text: 'A'},
+];
 
 const buildDeck = () => {
   const deck = [];
   let i = 0;
 
   for (i; i < suits.length; i++) {
-    for (let x = 0; x < values.length; x++) {
-      deck.push({value: values[x], suit: suits[i]});
+    for (let x = 0; x < symbols.length; x++) {
+      deck.push({value: symbols[x].value, text: symbols[x].text, suit: suits[i]});
     }
   }
 
