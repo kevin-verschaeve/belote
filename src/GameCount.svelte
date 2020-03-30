@@ -11,9 +11,10 @@
     const next = (players) => {
         db.doc(`games/${params.game}`).set(createGame(true)).then(() => {
             db.doc(`games/${params.game}`).get().then((doc) => {
-                dealPreGame(players, doc.data().deck);
-            }).then(() => {
-                push(`/game/${params.game}/play`);
+                const deck = dealPreGame(players, doc.data().deck);
+                doc.ref.update({deck: deck, started: true}).then(() => {
+                    push(`/game/${params.game}/play`);
+                });
             });
         });
     };
