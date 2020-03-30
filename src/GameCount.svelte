@@ -24,6 +24,13 @@
     <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
         <button on:click={next(players)}>Manche suivante</button>
     </Collection>
+    <div>
+        <span>{game.taker} :</span>
+        <div class="card mini">
+            <div class="suit {game.atout}"></div>
+        </div>
+    </div>
+
     <div class="plis-wrapper">
         <h2>Équipe Nord - Sud</h2>
         {#each game.NS as plis}
