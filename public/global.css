@@ -196,3 +196,7 @@ button:focus {
 	text-align: center;
 	padding-top: 10px;
 }
+
+#pickup {
+	margin-top: 50px;
+}
