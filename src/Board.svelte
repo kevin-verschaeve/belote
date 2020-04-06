@@ -155,7 +155,7 @@
             <button on:click={pickUpEW}>Est - Ouest</button>
         </div>
         {/if}
-        {#if game.nbPlis == 8}
+        {#if game.nbPlis >= 8}
             <button on:click={goToCount}>Compter</button>
         {/if}
     {:else}
