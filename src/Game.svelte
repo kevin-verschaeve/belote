@@ -1,11 +1,13 @@
 <script>
     import { Collection } from "sveltefire";
-    import { getContext } from 'svelte';
+    import { getContext, onMount, createEventDispatcher } from 'svelte';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
     export let params;
 
     const db = getContext('firebase').firestore();
+    const dispatch = createEventDispatcher();
+    onMount(() => dispatch('routeEvent', {title: false}));
 
     let myCards;
     let me = localStorage.getItem('me');
