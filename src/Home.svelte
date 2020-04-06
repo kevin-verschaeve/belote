@@ -13,8 +13,8 @@
     };
 </script>
 
-<div>
-    Créer une partie
-    <input type="text" bind:value={name}>
-    <button on:click={create}>Créer</button>
+<div id="home" class="box">
+    <span>Créer une nouvelle partie</span><br/>
+    <input placeholder="Nom de la partie" type="text" bind:value={name}>
+    <button class="btn waves-effect waves-light" on:click={create}>Créer</button>
 </div>

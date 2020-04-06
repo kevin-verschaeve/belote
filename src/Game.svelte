@@ -48,7 +48,7 @@
 
 <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
 {#if me && isPlayer(players, me)}
-    <div id="game">
+    <div id="game" style="height:100%">
         <div id="players">
             {#each players as player}
             <div class="player-wrap {player.team}">
@@ -70,9 +70,18 @@
         <Board gameId={params.game}/>
     </div>
 {:else}
-    Qui êtes-vous ?
-    {#each players as player}
-        <button on:click={setPlayer(player)}>{player.name}</button>
-    {/each}
+    <div class="box container">
+        <div class="row" style="text-align: center;">
+            <span>Qui êtes-vous ?</span>
+        </div>
+        <div class="row">
+        {#each players as player}
+            <div class="col s3" style="text-align: center;">
+                <img style="width: 100%;" src="heads/2.jpg"/>
+                <button class="btn waves-effect waves-light" on:click={setPlayer(player)}>{player.name}</button>
+            </div>
+        {/each}
+        </div>
+    </div>
 {/if}
 </Collection>

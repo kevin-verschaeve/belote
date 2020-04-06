@@ -166,12 +166,12 @@
             <button on:click={goToCount}>Compter</button>
         {/if}
     {:else}
+        <div class="box">
         <button on:click={restart}>Redistribuer</button>
         {#if card}
         <div id="atout-chooser">
             <p>Prendre ?</p>
             <Card {card}/>
-
             <div>
                 <button on:click={setTaker(me, card)}>Je prends !</button>
             </div>
@@ -186,7 +186,11 @@
                     </div>
                 {/each}
             </div>
+            <div>
+                <button on:click={setTaker(me, card)}>Je prends !</button>
+            </div>
         </div>
         {/if}
+        </div>
     {/if}
 </div>
