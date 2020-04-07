@@ -14,9 +14,24 @@
     };
 
     const start = (game, gameRef, players) => {
-        const deck = dealPreGame(players, game.deck);
-        gameRef.update({deck: deck, started: true}).then(() => {
-            push(`/game/${params.game}/play`);
+        const deck = dealPreGame(players);
+
+        const buffer = {NS: [], EW: []};
+        for (let p of players) {
+            buffer[p.team].push(p);
+        }
+
+        const newPlayers = [buffer.NS[0], buffer.EW[0], buffer.NS[1], buffer.EW[1]];
+        const batch = db.batch();
+
+        for (let i in players) {
+            batch.update(players[i].ref, newPlayers[i]);
+        }
+
+        batch.commit().then(() => {
+            gameRef.update({deck: deck, started: true}).then(() => {
+                push(`/game/${params.game}/play`);
+            });
         });
     };
 
