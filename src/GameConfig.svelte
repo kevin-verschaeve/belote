@@ -3,6 +3,7 @@
     import { push } from 'svelte-spa-router'
     import { getContext } from 'svelte';
     import { dealPreGame } from './GameManager.js';
+    import { getOneCard } from './DeckManager.js';
     export let params;
 
     const db = getContext('firebase').firestore();
@@ -28,8 +29,10 @@
             batch.update(players[i].ref, newPlayers[i]);
         }
 
+        const takeableCard = getOneCard(deck);
+
         batch.commit().then(() => {
-            gameRef.update({deck: deck, started: true}).then(() => {
+            gameRef.update({deck, takeableCard, started: true}).then(() => {
                 push(`/game/${params.game}/play`);
             });
         });

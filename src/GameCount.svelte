@@ -1,9 +1,10 @@
 <script>
     import { Collection, Doc } from "sveltefire";
     import { getContext } from 'svelte';
-    import Card from './Card.svelte';
-    import { createGame, dealPreGame } from './GameManager.js';
     import { push } from 'svelte-spa-router'
+    import { createGame, dealPreGame } from './GameManager.js';
+    import { getOneCard } from './DeckManager.js';
+    import Card from './Card.svelte';
     export let params;
 
     const db = getContext('firebase').firestore();
@@ -12,7 +13,9 @@
         db.doc(`games/${params.game}`).set(createGame(true)).then(() => {
             db.doc(`games/${params.game}`).get().then((doc) => {
                 const deck = dealPreGame(players, doc.data().deck);
-                doc.ref.update({deck: deck, started: true}).then(() => {
+                const takeableCard = getOneCard(deck);
+
+                doc.ref.update({deck, takeableCard, started: true}).then(() => {
                     push(`/game/${params.game}/play`);
                 });
             });

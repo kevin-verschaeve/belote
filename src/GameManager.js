@@ -5,6 +5,7 @@ export function createGame(started = false) {
 
   return {
     deck: deck,
+    takeableCard: null,
     board: [],
     NS: [],
     EW: [],
