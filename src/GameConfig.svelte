@@ -8,8 +8,8 @@
     const db = getContext('firebase').firestore();
     let name = '';
 
-    const addPlayer = (playersRef) => {
-        playersRef.add({name: name, canPlay: true});
+    const addPlayer = (playersRef, length) => {
+        playersRef.add({name, canPlay: true, pos: length + 1});
         name = '';
     };
 
@@ -41,7 +41,7 @@
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
-    <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
+    <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')} >
         <ol>
             {#each players as player}
                 <li>
@@ -62,7 +62,7 @@
             <div>
                 Ajouter un joueur
                 <input type="text" bind:value={name}>
-                <button on:click={addPlayer(playersRef)}>Ajouter</button>
+                <button on:click={addPlayer(playersRef, players.length)}>Ajouter</button>
             </div>
         {:else}
             {#if game.teamsReady}
