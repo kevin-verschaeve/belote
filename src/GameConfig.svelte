@@ -29,8 +29,8 @@
         const newPlayers = [buffer.NS[0], buffer.EW[0], buffer.NS[1], buffer.EW[1]];
         const batch = db.batch();
 
-        for (let i in players) {
-            batch.update(players[i].ref, newPlayers[i]);
+        for (let player of players) {
+            batch.update(player.ref, {pos: newPlayers.findIndex((p) => p.name == player.name)});
         }
 
         const takeableCard = getOneCard(deck);
@@ -48,7 +48,7 @@
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
-    <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')} >
+    <Collection path={gameRef.collection('players')} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')}>
         <ol>
             {#each players as player}
                 <li>

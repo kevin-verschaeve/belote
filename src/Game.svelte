@@ -36,7 +36,7 @@
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
-    <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
+    <Collection path={gameRef.collection('players')} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')}>
     {#if me && isPlayer(players, me)}
         <div id="game">
             <div id="players">
