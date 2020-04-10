@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     export let card;
-    export let playable;
+    export let playable = false;
 
     const dispatch = createEventDispatcher();
     const click = () => dispatch('click');
