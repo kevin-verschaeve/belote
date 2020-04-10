@@ -45,6 +45,12 @@ export function getDeck() {
   return deck;
 }
 
+export function cutDeck(deck) {
+  const cutPoint = Math.floor(Math.random() * 26) + 3; // number between 3 and 29 (26 + 3)
+
+  return [...deck.slice(cutPoint, deck.length), ...deck.slice(0, cutPoint)];
+}
+
 export function getPlayerCards(deck, nb, player) {
   let i = 0;
   const cards = [];

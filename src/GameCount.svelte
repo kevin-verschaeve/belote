@@ -3,7 +3,7 @@
     import { getContext } from 'svelte';
     import { push } from 'svelte-spa-router'
     import { createGame, dealPreGame } from './GameManager.js';
-    import { getOneCard } from './DeckManager.js';
+    import { getOneCard, cutDeck } from './DeckManager.js';
     import Card from './Card.svelte';
     export let params;
 
@@ -16,6 +16,7 @@
         if (!shake) {
             deck = [];
             [...game.NS, ...game.EW].map((pli) => deck.push(...JSON.parse(pli)));
+            deck = cutDeck(deck);
         }
 
         gameRef.set(createGame(true, deck)).then(() => {
