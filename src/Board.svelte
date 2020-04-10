@@ -53,7 +53,7 @@
             let plis = doc.data()[team] || [];
             plis.push(JSON.stringify(currentBoard));
 
-            db.doc(`games/${gameId}`).update({[team]: plis, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
+            db.doc(`games/${gameId}`).update({[team]: plis, lastPli: currentBoard, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
                 db.collection(`games/${gameId}/players`).get().then((snapshot) => {
                     let batch = db.batch();
                     snapshot.forEach((doc) => {
@@ -96,19 +96,7 @@
         });
     }
 
-    let lastPli;
-    const getLastPliNS = () => getLastPli('NS');
-    const getLastPliEW = () => getLastPli('EW');
-    function getLastPli(team) {
-        if (lastPli) {
-          return;
-        }
-
-        let last = game[team].slice(-1);
-        if (last.length) {
-            lastPli = JSON.parse(last);
-        }
-    }
+    let lastPli = false;
 </script>
 
 <div id="board">
@@ -121,20 +109,20 @@
                     <div class="suit {game.atout}"></div>
                 </div>
             </h2>
+            {#if game.lastPli}
             <div>
                 <div>
-                    <button on:click={getLastPliNS}>Dernier plis NS</button>
-                    <button on:click={getLastPliEW}>Dernier plis EW</button>
+                    <button on:click={() => lastPli = !lastPli}>{#if lastPli}OK !{:else}Voir le dernier pli{/if}</button>
                 </div>
                 {#if lastPli}
                     <div class="player-cards">
-                        {#each lastPli as card}
-                            <Card {card}/>
+                        {#each game.lastPli as card}
+                            <Card {card} playable={false}/>
                         {/each}
                     </div>
-                    <button on:click={() => {lastPli = null}}>OK !</button>
                 {/if}
             </div>
+            {/if}
         </div>
         {/if}
         <div class="player-cards">

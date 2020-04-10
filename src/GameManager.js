@@ -15,6 +15,7 @@ export function createGame(started = false) {
     taker: null,
     nbPlis: 0,
     atout: null,
+    lastPli: null,
   };
 }
 
