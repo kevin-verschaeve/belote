@@ -81,8 +81,10 @@ button:focus {
 	display: inline-flex;
 }
 
-.plis {
+.pli,
+#final-score {
 	display: flex;
+	justify-content: space-around;
 }
 
 #atout-indicator,
@@ -199,4 +201,9 @@ button:focus {
 
 #pickup {
 	margin-top: 50px;
+}
+
+.capot {
+	font-size: 2em;
+	font-weight: bold;
 }

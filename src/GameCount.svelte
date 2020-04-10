@@ -4,7 +4,7 @@
     import { push } from 'svelte-spa-router'
     import { createGame, dealPreGame } from './GameManager.js';
     import { getOneCard, cutDeck } from './DeckManager.js';
-    import Card from './Card.svelte';
+    import TeamScore from './TeamScore.svelte';
     export let params;
 
     const db = getContext('firebase').firestore();
@@ -50,26 +50,9 @@
         </div>
     </div>
 
-    <div class="plis-wrapper">
-        <h2>Équipe Nord - Sud</h2>
-        {#each game.NS as plis}
-            <div class="plis">
-                {#each JSON.parse(plis) as card}
-                <Card {card}/>
-                {/each}
-            </div>
-        {/each}
-    </div>
-
-    <div class="plis-wrapper">
-        <h2>Équipe Est - Ouest</h2>
-        {#each game.EW as plis}
-        <div class="plis">
-            {#each JSON.parse(plis) as card}
-            <Card {card}/>
-            {/each}
-        </div>
-        {/each}
+    <div id="final-score">
+        <TeamScore plis={game.NS} team={'NS'}/>
+        <TeamScore plis={game.EW} team={'EW'}/>
     </div>
     {:else}
         <a href="/#/game/{params.game}/play">Rejoindre la partie</a>
