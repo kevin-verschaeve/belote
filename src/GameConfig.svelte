@@ -36,7 +36,7 @@
         const takeableCard = getOneCard(deck);
 
         batch.commit().then(() => {
-            gameRef.update({deck, takeableCard, started: true}).then(() => {
+            gameRef.update({deck, takeableCard, started: true, dealComplete: false}).then(() => {
                 push(`/game/${params.game}/play`);
             });
         });
