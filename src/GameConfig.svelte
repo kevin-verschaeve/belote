@@ -22,6 +22,10 @@
             buffer[p.team].push(p);
         }
 
+        if (buffer.NS.length != 2 || buffer.EW.length != 2) {
+            return;
+        }
+
         const newPlayers = [buffer.NS[0], buffer.EW[0], buffer.NS[1], buffer.EW[1]];
         const batch = db.batch();
 
