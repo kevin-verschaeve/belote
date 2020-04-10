@@ -19,14 +19,14 @@
         db.doc(`games/${gameId}`).onSnapshot((doc) => {
             game = doc.data();
 
-            if (!game.dealComplete) {
-                db.collection(`games/${gameId}/players`).get().then((snapshot) => {
-                    players = snapshot.docs.map((d) => {
-                        return {...d.data(), ...{id: d.id}}
-                    });
-                    card = getOneCard(game.deck);
+            db.collection(`games/${gameId}/players`).get().then((snapshot) => {
+                players = snapshot.docs.map((d) => {
+                    return {...d.data(), ...{id: d.id}}
                 });
-            }
+                if (!game.dealComplete) {
+                    card = getOneCard(game.deck);
+                }
+            });
         });
     });
 
@@ -45,9 +45,8 @@
         });
     };
 
-    const pickUpNS = () => pickUp('NS');
-    const pickUpEW = () => pickUp('EW');
-    const pickUp = (team) => {
+    const pickUp = () => {
+        const team = players.find((p) => p.name == me).team;
         db.doc(`games/${gameId}`).get().then((doc) => {
             const currentBoard = doc.data().board;
             let plis = doc.data()[team] || [];
@@ -139,8 +138,7 @@
         </div>
         {#if game.toPick}
         <div id="pickup">
-            <button on:click={pickUpNS}>Nord - Sud</button>
-            <button on:click={pickUpEW}>Est - Ouest</button>
+            <button on:click={pickUp}>Ramasser le pli</button>
         </div>
         {/if}
         {#if game.nbPlis >= 8}
