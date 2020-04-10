@@ -1,7 +1,9 @@
 import { getDeck, getPlayerCards } from "./DeckManager";
 
-export function createGame(started = false) {
-  const deck = getDeck();
+export function createGame(started = false, deck = null) {
+  if (null === deck) {
+    deck = getDeck();
+  }
 
   return {
     deck: deck,
