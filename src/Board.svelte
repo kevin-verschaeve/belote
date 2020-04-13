@@ -16,6 +16,7 @@
 
     const setTaker = () => {
         gameRef.update({taker: me, atout: atout || game.takeableCard.suit}).then(() => {
+            atout = null;
             for (let player of players) {
                 if (player.name == me) {
                     game.takeableCard.player = player.name;

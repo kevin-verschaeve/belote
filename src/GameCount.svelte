@@ -21,10 +21,10 @@
 
         gameRef.set(createGame(true, deck)).then(() => {
             db.doc(`games/${params.game}`).get().then((doc) => {
-                const deck = dealPreGame(players, doc.data().deck);
+                deck = dealPreGame(players, deck);
                 const takeableCard = getOneCard(deck);
 
-                doc.ref.update({deck, takeableCard, started: true}).then(() => {
+                doc.ref.update({deck, takeableCard, started: true, dealComplete: false}).then(() => {
                     push(`/game/${params.game}/play`);
                 });
             });
