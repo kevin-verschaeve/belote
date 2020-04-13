@@ -207,3 +207,11 @@ button:focus {
 	font-size: 2em;
 	font-weight: bold;
 }
+
+.btn-change-player {
+	border: none;
+	background: none;
+    padding: 0;
+	cursor: pointer;
+    float: right;
+}

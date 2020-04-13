@@ -42,7 +42,12 @@
             <div id="players">
                 {#each players as player}
                 <div class="player-wrap {player.team}">
-                    <p>{player.name} - {player.team}</p>
+                    <p>
+                        {player.name} - {player.team}
+                        {#if me == player.name}
+                            <button type="button" on:click={() => me = null} class="btn-change-player" title="Je ne suis pas {player.name} !">⛔</button>
+                        {/if}
+                    </p>
                     <div class="player-cards">
                         {#each sortCards(player.cards, game.atout) as card}
                             <div class="card-wrapper">
