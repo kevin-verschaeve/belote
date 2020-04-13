@@ -55,7 +55,7 @@
 
         player.ref.update({cards: cards, canPlay: true}).then(() => {
             let board = game.board;
-            const index = board.findIndex((c) => c.suit == card.suit && c.value == card.value);
+            const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];
             gameRef.update({board: board, toPick: board.length == 4});
         });

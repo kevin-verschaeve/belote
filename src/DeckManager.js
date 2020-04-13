@@ -1,13 +1,23 @@
 export const suits = ["spades", "diamonds", "clubs", "hearts"];
-const values = ["A", "7", "8", "9", "10", "J", "Q", "K"];
+
+const details = [
+  {text: 'A', value: 11, order: 8},
+  {text: '10', value: 10, order: 7},
+  {text: 'K', value: 4, order: 6},
+  {text: 'Q', value: 3, order: 5},
+  {text: 'J', value: 2, order: 4},
+  {text: '9', value: 0, order: 3},
+  {text: '8', value: 0, order: 2},
+  {text: '7', value: 0, order: 1},
+];
 
 const buildDeck = () => {
   const deck = [];
   let i = 0;
 
   for (i; i < suits.length; i++) {
-    for (let x = 0; x < values.length; x++) {
-      deck.push({value: values[x], suit: suits[i]});
+    for (let x = 0; x < details.length; x++) {
+      deck.push({...details[x], ...{suit: suits[i], suitOrder: i}});
     }
   }
 
@@ -47,6 +57,39 @@ export function getPlayerCards(deck, nb, player) {
   }
 
   return cards;
+}
+
+export function sortCards(cards, atout) {
+  return cards.sort((a, b) => {
+    let aOrder = a.order;
+    let bOrder = b.order;
+
+    if (atout == a.suit) {
+      if (a.text == 'J') {
+        aOrder = 10;
+      }
+
+      if (a.text == '9') {
+        aOrder = 9;
+      }
+    }
+
+    if (atout == b.suit) {
+      if (b.text == 'J') {
+        bOrder = 10;
+      }
+
+      if (b.text == '9') {
+        bOrder = 9;
+      }
+    }
+
+    if (a.suitOrder < b.suitOrder || (a.suit == b.suit && aOrder < bOrder)) {
+      return -1;
+    }
+
+    return 1;
+  });
 }
 
 export function getOneCard(deck) {

@@ -1,6 +1,7 @@
 <script>
     import { Doc, Collection } from "sveltefire";
     import { getContext, onMount, createEventDispatcher } from 'svelte';
+    import { sortCards } from './DeckManager.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
     export let params;
@@ -25,23 +26,13 @@
             return;
         }
 
-        const index = player.cards.findIndex((c) => c.suit == card.suit && c.value == card.value);
+        const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
         player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false}).then(() => {
             const board = game.board;
             board.push(card);
             gameRef.update({board: board, toPick: board.length == 4});
         });
     };
-
-    function sortCards(cards) {
-        return cards.sort(function (a, b) {
-            if (a.suit < b.suit || (a.suit == b.suit && a.value < b.value)) {
-                return -1;
-            }
-
-            return 1;
-        });
-    }
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
@@ -53,7 +44,7 @@
                 <div class="player-wrap {player.team}">
                     <p>{player.name} - {player.team}</p>
                     <div class="player-cards">
-                        {#each sortCards(player.cards) as card}
+                        {#each sortCards(player.cards, game.atout) as card}
                             <div class="card-wrapper">
                                 {#if me == player.name}
                                     <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card)} />
