@@ -27,7 +27,7 @@
                 } else {
                     player.cards.push(...getPlayerCards(game.deck, 3, player.name));
                 }
-                player.ref.update({cards: player.cards});
+                player.ref.update({cards: player.cards, canPlay: true});
                 gameRef.update({deck: game.deck, dealComplete: true});
             }
         });
@@ -41,7 +41,7 @@
 
         gameRef.update({[team]: plis, lastPli: currentBoard, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
             let batch = db.batch();
-            players.map((p) => batch.update(p.ref, {canPlay: true}));
+            players.map((p) => batch.update(p.ref, {canPlay: game.nbPlis < 8}));
             batch.commit();
         });
     };

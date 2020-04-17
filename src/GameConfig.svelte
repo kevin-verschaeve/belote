@@ -10,7 +10,7 @@
     let name = '';
 
     const addPlayer = (playersRef, length) => {
-        playersRef.add({name, canPlay: true, pos: length + 1});
+        playersRef.add({name, pos: length + 1});
         name = '';
     };
 
@@ -31,18 +31,14 @@
         const batch = db.batch();
 
         for (let player of players) {
-            batch.update(player.ref, {pos: newPlayers.findIndex((p) => p.name == player.name)});
+            batch.update(player.ref, {canPlay: false, pos: newPlayers.findIndex((p) => p.name == player.name)});
         }
 
         newGame.takeableCard = getOneCard(newGame.deck);
 
         batch.commit().then(() => {
             gameRef.set(newGame).then(() => {
-                let batch = db.batch();
-                players.map((p) => batch.update(p.ref, {canPlay: true}));
-                batch.commit().then(() => {
-                    push(`/game/${params.game}/play`);
-                });
+                push(`/game/${params.game}/play`);
             });
         });
     };
