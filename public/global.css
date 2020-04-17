@@ -1,3 +1,10 @@
+:root {
+	--main-text-color: #FFF;
+	--secondary-text-color: #000;
+	--color-red-card: #d90000;
+	--color-black-card: #000;
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -6,10 +13,12 @@ html, body {
 
 body {
 	color: #333;
+	/*background-image: url(bg-body.png);*/
+	background: radial-gradient(#02a920, #003006);
 	margin: 0;
 	padding: 10px 50px;
 	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-family: Roboto, sans-serif;
 }
 
 a {
@@ -65,12 +74,25 @@ button:focus {
 	border-color: #666;
 }
 
+.no-border {
+	border: none !important;
+}
+
+.no-style {
+	list-style-type: none;
+}
+
 #app-name {
 	text-align: center;
 }
 
+#app-name.titleInCorner {
+	position: absolute;
+}
+
 #app-name a {
-	color: #333;
+	font-family: 'Pacifico', cursive;
+	color: var(--main-text-color);
 }
 
 #app-name a:hover {
@@ -87,103 +109,189 @@ button:focus {
 	justify-content: space-around;
 }
 
+.pli {
+	margin-top: 10px;
+}
+
+#taker {
+	margin-right: 10px;
+}
+
+#game-infos {
+	position: fixed;
+	top: 2.8rem;
+	right: 3%;
+	color: var(--main-text-color);
+}
+
 #atout-indicator,
 #suits-two {
-	display: inline-flex;
+	display: flex;
     align-items: center;
 }
 
-.card {
+.playing-card {
 	position: relative;
 	border: solid 1px #aaa;
 	border-radius: 9px;
-	width: 50px;
-	height: 85px;
+	width: 80px;
+	height: 120px;
 	background: #FFF;
-	padding: 3px 3px 3px 3px;
-	margin-right: 10px;
+	padding: 3px	;
+	margin-right: -25px;
 }
-.card.mini {
-	margin-left: 20px;
-	width: 45px;
+.playing-card.mini {
 	height: auto;
+	width: 55px;
 }
 
-.card.card-hidden {
-	background: url(back.jpg);
+#suits-two .playing-card.mini {
+	margin-right: 5px;
 }
 
-.card .value {
+.playing-card.playing-card-hidden {
+	background: url(back.png);
+	background-size: cover;
+	border: 5px solid #FFF;
+	box-shadow: -4px -2px 2px 0px #000;
+}
+
+.playing-card .value {
 	font-size: 15pt;
 	font-family: sans-serif;
+	color: var(--secondary-text-color);
 }
 
-.card .suit {
-	background-image: url(suits.png);
+.playing-card .value.top {
+	text-align: left;
+}
+.playing-card .value.bottom {
+	text-align: right;
+}
+
+.small-suit.top {
+	position: absolute;
+	top: 25px;
+	left: 5px;
+}
+.small-suit.bottom {
+	position: absolute;
+	bottom: 27px;
+	right: 5px;
+}
+
+.playing-card .suit {
 	height: 50px;
 	width: 45px;
+	border-radius: 5px;
+	text-align: center;
+	margin: 0 auto;
+	font-size: 4em;
+	line-height: 0.8;
 }
 
-.card .hearts {
-	background-position-x: 145px;
+.suit.hearts.bottom:before,
+.suit.hearts.top:before,
+.playing-card .hearts:before {
+	content: '♥';
+	color: var(--color-red-card);
 }
 
-.card .diamonds {
-	background-position-y: 150px;
+.suit.diamonds.bottom:before,
+.suit.diamonds.top:before,
+.playing-card .diamonds:before {
+	content: '◆';
+	color: var(--color-red-card);
 }
 
-.card .clubs {
-	background-position-x: 145px;
-	background-position-y: 150px;
+.suit.clubs.bottom:before,
+.suit.clubs.top:before,
+.playing-card .clubs:before {
+	content: '♣';
+	color: var(--color-black-card);
 }
 
-.card .spades {
-	background-position-x: 2px;
-	background-position-y: 100px;
+.suit.spades.bottom:before,
+.suit.spades.top:before,
+.playing-card .spades:before {
+	content: '♠';
+	color: var(--color-black-card);
 }
 
-#game {
+#board {
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
+	height: 100%;
 }
 
-.card.playable {
+.playing-card.playable {
 	cursor: pointer;
 }
 
-.card.playable:hover,
 .btn-cancel-card:hover {
-	box-shadow: 2px 3px 4px #000;
+	box-shadow: 0 0 6px 0 #000;
+}
+
+.playing-card.playable:hover {
+	box-shadow: 0 0 18px 0 #000;
+	bottom: 10px;
+}
+
+.playing-card.takeable {
+	margin: 30px auto;
 }
 
 .selected-atout {
 	background: green;
-	padding: 6px;
+	padding: 4px;
 }
 
 .player-wrap {
 	padding: 10px;
 	margin-bottom: 10px;
 	border-radius: 10px;
+	color: var(--main-text-color);
+	position: fixed;
+	width: 485px;
+}
+
+.player-wrap.west {
+	left: 80px;
+	transform: rotate(90deg) translateY(100%);
+	top: 50%;
+}
+
+.player-wrap.south {
+	bottom: 0;
+	left: 40%;
+}
+
+.player-wrap.north {
+	top: 10px;
+	left: 40%;
+}
+
+.player-wrap.east {
+	right: 80px;
+	transform: rotate(-90deg) translateY(100%);
+	bottom: 50%;
+}
+
+#players.deal-complete .player-wrap.east,
+#players.deal-complete .player-wrap.west {
+	top: 40%;
+	bottom: auto;
 }
 
 .player-wrap p {
 	margin: 0 0 10px 0;
 }
 
-.player-wrap.NS {
-	background: #F2F2F2;
-}
-
-.player-wrap.EW {
-	background: #b2b2b2;
-}
-
 .cancel-card {
 	position: absolute;
-	top: -10px;
-	right: -10px;
+	top: -12px;
+	left: -12px;
 }
 
 .btn-cancel-card {
@@ -196,6 +304,7 @@ button:focus {
 
 .played-card-player {
 	text-align: center;
+	color: var(--main-text-color);
 	padding-top: 10px;
 }
 
@@ -213,5 +322,90 @@ button:focus {
 	background: none;
     padding: 0;
 	cursor: pointer;
-    float: right;
+}
+
+.box {
+	border: solid 1px rgba(51,51,51,0.12);
+	background: rgba(246,246,246,1);
+	border-radius: 10px;
+	padding: 20px;
+	width: 60%;
+	margin: 0 auto;
+}
+
+.box-auto {
+	width: auto;
+}
+
+.box hr {
+	width: 25%;
+}
+
+#home {
+	text-align: center;
+}
+
+#modal-last-pli {
+	color: var(--secondary-text-color);
+}
+
+#btn-pickup {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.text {
+	color: var(--main-text-color);
+}
+
+/* Override bullshit of Materialize */
+[type="checkbox"].filled-in:not(:checked)+span:not(.lever):after {
+	border-color: #FFF !important;
+}
+
+#btn-restart {
+	margin-top: 20px;
+}
+
+
+#take-two {
+	margin-top: 50px;
+}
+
+@media screen and (max-width: 480px) {
+	#choose-player {
+		margin-top: 150px;
+	}
+	.playing-card {
+		width: 50px;
+		height: 80px;
+	}
+
+	.player-wrap {
+		width: 340px;
+		text-align: center;
+	}
+
+	.player-wrap.north {
+		top: 20%;
+		left: 10%;
+	}
+
+	.player-wrap.south {
+		left: 10%;
+	}
+
+	#players.deal-complete .player-wrap.east {
+		top: 52%;
+		right: -10%;
+	}
+
+	#players.deal-complete .player-wrap.west {
+		top: 52%;
+		left: -10%;
+	}
+
+	.playing-card {
+		margin: -5px;
+	}
 }

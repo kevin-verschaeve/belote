@@ -14,7 +14,6 @@ export function createGame(started = false, deck = null) {
     finished: false,
     started: started,
     dealComplete: false,
-    teamsReady: false,
     taker: null,
     nbPlis: 0,
     atout: null,

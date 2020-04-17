@@ -19,15 +19,13 @@
 	firebase.initializeApp(firebaseConfig);
 	firebase.analytics();
 
-	let displayTitle = true;
+	let titleInCorner = false;
 	const routeEvent = (event) => {
-		displayTitle = event.detail.title;
+		titleInCorner = event.detail.titleInCorner;
 	};
 </script>
 
-{#if displayTitle}
-<h1 id="app-name"><a href="/">Belote</a></h1>
-{/if}
 <FirebaseApp {firebase}>
+	<h1 id="app-name" class:titleInCorner><a href="/">Belote</a></h1>
 	<Router {routes} on:routeEvent={routeEvent}/>
 </FirebaseApp>

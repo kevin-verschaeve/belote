@@ -8,7 +8,7 @@
 
     const db = getContext('firebase').firestore();
     const dispatch = createEventDispatcher();
-    onMount(() => dispatch('routeEvent', {title: false}));
+    onMount(() => dispatch('routeEvent', {titleInCorner: true}));
 
     let myCards;
     let me = localStorage.getItem('me');
@@ -33,19 +33,30 @@
             gameRef.update({board: board, toPick: board.length == 4});
         });
     };
+
+    const reOrderPlayers = (players) => {
+        const iam = players.find((p) => p.name == me);
+        const west = players.find((p) => p.team != iam.team && p.pos == (iam.pos + 1 > 3 ? 0 : iam.pos + 1));
+
+        return [
+            iam,
+            west,
+            players.find((p) => p.team == iam.team && p.name != iam.name),
+            players.find((p) => p.team == west.team && p.name != west.name),
+        ];
+    };
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
     <Collection path={gameRef.collection('players')} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')}>
     {#if me && isPlayer(players, me)}
-        <div id="game">
-            <div id="players">
-                {#each players as player}
-                <div class="player-wrap {player.team}">
+        <div id="players" class:deal-complete={game.dealComplete}>
+            {#each reOrderPlayers(players) as player, i}
+                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name}>
                     <p>
-                        {player.name} - {player.team}
+                        {player.name}
                         {#if me == player.name}
-                            <button type="button" on:click={() => me = null} class="btn-change-player" title="Je ne suis pas {player.name} !">⛔</button>
+                            <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
                         {/if}
                     </p>
                     <div class="player-cards">
@@ -54,21 +65,28 @@
                                 {#if me == player.name}
                                     <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card)} />
                                 {:else}
-                                    <div class="card card-hidden"></div>
+                                    <div class="playing-card playing-card-hidden"></div>
                                 {/if}
                             </div>
                         {/each}
                     </div>
                 </div>
+            {/each}
+        </div>
+        <Board {game} {gameRef} {players}/>
+    {:else}
+        <div id="choose-player" class="box container">
+            <div class="row center-align">
+                <h3>Qui êtes-vous ?</h3>
+            </div>
+            <div class="row">
+                {#each players as player}
+                    <div class="col s3 center-align">
+                        <button class="btn waves-effect waves-light" on:click={setPlayer(player)}>{player.name}</button>
+                    </div>
                 {/each}
             </div>
-            <Board {game} {gameRef} {players}/>
         </div>
-    {:else}
-        Qui êtes-vous ?
-        {#each players as player}
-            <button on:click={setPlayer(player)}>{player.name}</button>
-        {/each}
     {/if}
     </Collection>
 </Doc>

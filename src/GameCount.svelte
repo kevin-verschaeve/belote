@@ -19,39 +19,33 @@
             deck = cutDeck(deck);
         }
 
-        gameRef.set(createGame(true, deck)).then(() => {
-            db.doc(`games/${params.game}`).get().then((doc) => {
-                deck = dealPreGame(players, deck);
-                const takeableCard = getOneCard(deck);
-
-                doc.ref.update({deck, takeableCard, started: true, dealComplete: false}).then(() => {
-                    push(`/game/${params.game}/play`);
-                });
-            });
-        });
+        const newGame = createGame(true, deck);
+        newGame.deck = dealPreGame(players, newGame.deck);
+        newGame.takeableCard = getOneCard(newGame.deck);
+        gameRef.set(newGame).then(() => push(`/game/${params.game}/play`));
     };
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
     {#if game.finished}
+    <h2 class="center-align text">Score</h2>
     <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
-        <div>
-            <label>
-                Mélanger ?
-                <input type="checkbox" bind:value={shake}>
-            </label>
-        </div>
-        <button on:click={next(players, game, gameRef)}>Manche suivante</button>
+        <label>
+            <input type="checkbox" bind:value={shake} class="filled-in">
+            <span class="text">Mélanger ?</span>
+        </label>
+        <br>
+        <button on:click={next(players, game, gameRef)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
     </Collection>
-    <div>
-        <span>{game.taker} :</span>
-        <div class="card mini">
-            <div class="suit {game.atout}"></div>
-        </div>
-    </div>
 
     <div id="final-score">
         <TeamScore plis={game.NS} team={'NS'}/>
+        <div>
+            <p class="text">{game.taker}</p>
+            <div class="playing-card mini">
+                <div class="suit {game.atout}"></div>
+            </div>
+        </div>
         <TeamScore plis={game.EW} team={'EW'}/>
     </div>
     {:else}

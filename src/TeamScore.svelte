@@ -5,7 +5,7 @@
 </script>
 
 <div class="plis-wrapper">
-    <h2>Équipe {team == 'NS' ? 'Nord - Sud' : 'Est - Ouest'}</h2>
+    <h3 class="text">Équipe {team == 'NS' ? 'Nord - Sud' : 'Est - Ouest'}</h3>
     {#if plis.length}
         {#each plis as pli}
             <div class="pli">
@@ -15,7 +15,7 @@
             </div>
         {/each}
     {:else}
-        <p class="capot">Capot dans vos gueules !</p>
-        <img src="https://media.giphy.com/media/UTYz3M8lcTvqaVbSo9/source.gif" width="400">
+        <p class="capot text">Capot dans vos gueules !</p>
+        <img src="https://media.giphy.com/media/UTYz3M8lcTvqaVbSo9/source.gif" width="400"/>
     {/if}
 </div>
