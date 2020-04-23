@@ -49,6 +49,6 @@
         <TeamScore plis={game.EW} team={'EW'}/>
     </div>
     {:else}
-        <a href="/#/game/{params.game}/play">Rejoindre la partie</a>
+        {push(`/game/${params.game}/play`)}
     {/if}
 </Doc>
