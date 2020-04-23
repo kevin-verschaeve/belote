@@ -9,11 +9,11 @@
 
     const db = getContext('firebase').firestore();
 
-    let shake = false;
+    let shuffle = false;
 
     const next = (players, game, gameRef) => {
         let deck = null;
-        if (!shake) {
+        if (!shuffle) {
             deck = [];
             [...game.NS, ...game.EW].map((pli) => deck.push(...JSON.parse(pli)));
             deck = cutDeck(deck);
@@ -31,7 +31,7 @@
     <h2 class="center-align text">Score</h2>
     <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
         <label>
-            <input type="checkbox" bind:value={shake} class="filled-in">
+            <input type="checkbox" bind:value={shuffle} class="filled-in">
             <span class="text">Mélanger ?</span>
         </label>
         <br>
