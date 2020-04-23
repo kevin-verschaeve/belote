@@ -36,18 +36,18 @@
         </label>
         <br>
         <button on:click={next(players, game, gameRef)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
-    </Collection>
 
-    <div id="final-score">
-        <TeamScore plis={game.NS} team={'NS'}/>
-        <div>
-            <p class="text">{game.taker}</p>
-            <div class="playing-card mini">
-                <div class="suit {game.atout}"></div>
+        <div id="final-score">
+            <TeamScore plis={game.NS} team={'NS'} {players}/>
+            <div>
+                <p class="text">{game.taker}</p>
+                <div class="playing-card mini">
+                    <div class="suit {game.atout}"></div>
+                </div>
             </div>
+            <TeamScore plis={game.EW} team={'EW'} {players}/>
         </div>
-        <TeamScore plis={game.EW} team={'EW'}/>
-    </div>
+    </Collection>
     {:else}
         {push(`/game/${params.game}/play`)}
     {/if}

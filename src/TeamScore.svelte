@@ -2,10 +2,11 @@
     import Card from "./Card.svelte";
     export let plis;
     export let team;
+    export let players;
 </script>
 
 <div class="plis-wrapper">
-    <h3 class="text">Équipe {team == 'NS' ? 'Nord - Sud' : 'Est - Ouest'}</h3>
+    <h3 class="text">{players.filter((p) => p.team == team).map((p) => p.name).join(' / ')}</h3>
     {#if plis.length}
         {#each plis as pli}
             <div class="pli">
