@@ -26,11 +26,15 @@
             return;
         }
 
-        const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
-        player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false}).then(() => {
-            const board = game.board;
-            board.push(card);
-            gameRef.update({board: board, toPick: board.length == 4});
+        db.runTransaction((transaction) => {
+            return transaction.get(gameRef).then((g) => {
+                const board = g.data().board;
+                board.push(card);
+
+                const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
+                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false});
+                transaction.update(g.ref, {board: board, toPick: board.length == 4});
+            });
         });
     };
 
