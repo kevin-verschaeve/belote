@@ -23,6 +23,7 @@
         const newGame = createGame(true, deck);
         newGame.deck = dealPreGame(players, newGame.deck);
         newGame.takeableCard = getOneCard(newGame.deck);
+        newGame.currentPlayer = players[Math.floor(Math.random() * players.length)].name;
         gameRef.set(newGame);
     };
 </script>

@@ -31,10 +31,11 @@
         const batch = db.batch();
 
         for (let player of players) {
-            batch.update(player.ref, {canPlay: false, pos: newPlayers.findIndex((p) => p.name == player.name)});
+            batch.update(player.ref, {pos: newPlayers.findIndex((p) => p.name == player.name)});
         }
 
         newGame.takeableCard = getOneCard(newGame.deck);
+        newGame.currentPlayer = players[Math.floor(Math.random() * players.length)].name;
 
         batch.commit().then(() => {
             db.doc(`games/${params.game}`).set(newGame).then(() => push(`/game/${params.game}/play`));

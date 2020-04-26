@@ -48,11 +48,7 @@
         let plis = game[team] || [];
         plis.push(JSON.stringify(currentBoard));
 
-        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: pliWinner, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
-            let batch = db.batch();
-            players.map((p) => batch.update(p.ref, {canPlay: game.nbPlis < 8}));
-            batch.commit();
-        });
+        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: pliWinner, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false});
     };
 
     function cancelCard(card) {
@@ -60,7 +56,8 @@
         const cards = player.cards;
         cards.push(card);
 
-        player.ref.update({cards: cards, canPlay: true}).then(() => {
+        // todo: new field when canceled ??
+        player.ref.update({cards: cards}).then(() => {
             let board = game.board;
             const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];
@@ -73,6 +70,7 @@
         const newGame = createGame();
         newGame.deck = dealPreGame(players);
         newGame.takeableCard = getOneCard(newGame.deck);
+        newGame.currentPlayer = players[Math.floor(Math.random() * players.length)].name;
         gameRef.set(newGame);
     }
 

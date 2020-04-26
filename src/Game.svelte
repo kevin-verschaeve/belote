@@ -22,7 +22,8 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        if (!player.canPlay || !canPlay) {
+        // todo: if card canceled, bypass this
+        if (game.currentPlayer !== player.name || !canPlay) {
             return;
         }
 
@@ -37,7 +38,7 @@
                 const currentPlayer = players.find((p) => p.pos == (player.pos + 1 > 3 ? 0 : player.pos + 1)).name;
 
                 const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
-                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false});
+                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)]});
                 transaction.update(g.ref, {board: board, toPick: board.length == 4, currentPlayer});
             });
         });
@@ -75,7 +76,7 @@
                             {#each sortCards(player.cards, game.atout) as card}
                                 <div class="card-wrapper">
                                     {#if me == player.name}
-                                        <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card, players)} />
+                                        <Card {card} playable={me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
                                     {:else}
                                         <div class="playing-card playing-card-hidden"></div>
                                     {/if}
