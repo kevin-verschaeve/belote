@@ -378,9 +378,12 @@ button:focus {
 	margin-top: 20px;
 }
 
-
 #take-two {
 	margin-top: 50px;
+}
+
+.player-turn {
+	background: black;
 }
 
 @media screen and (max-width: 480px) {

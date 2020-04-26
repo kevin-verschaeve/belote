@@ -21,7 +21,7 @@
 
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
-    const play = (game, gameRef, player, card) => {
+    const play = (game, gameRef, player, card, players) => {
         if (!player.canPlay || !canPlay) {
             return;
         }
@@ -33,9 +33,12 @@
                 const board = g.data().board;
                 board.push(card);
 
+                // todo: do not if someone canceled a card then replayed
+                const currentPlayer = players.find((p) => p.pos == (player.pos + 1 > 3 ? 0 : player.pos + 1)).name;
+
                 const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
                 player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], canPlay: false});
-                transaction.update(g.ref, {board: board, toPick: board.length == 4});
+                transaction.update(g.ref, {board: board, toPick: board.length == 4, currentPlayer});
             });
         });
     };
@@ -61,9 +64,9 @@
         {#if me && isPlayer(players, me)}
             <div id="players" class:deal-complete={game.dealComplete}>
                 {#each reOrderPlayers(players) as player, i}
-                    <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name}>
+                    <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
                         <p>
-                            {player.name}
+                            {player.name} {#if game.currentPlayer == player.name}*{/if}
                             {#if me == player.name}
                                 <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
                             {/if}
@@ -72,7 +75,7 @@
                             {#each sortCards(player.cards, game.atout) as card}
                                 <div class="card-wrapper">
                                     {#if me == player.name}
-                                        <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card)} />
+                                        <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card, players)} />
                                     {:else}
                                         <div class="playing-card playing-card-hidden"></div>
                                     {/if}

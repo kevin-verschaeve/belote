@@ -2,6 +2,7 @@
     import { getContext, afterUpdate, createEventDispatcher } from 'svelte';
     import { getOneCard, getPlayerCards, suits } from './DeckManager.js';
     import { createGame, dealPreGame } from './GameManager.js';
+    import { findPliWinner } from './PliManager.js';
     import Card from './Card.svelte';
 
     export let game;
@@ -34,13 +35,20 @@
         });
     };
 
+    const temp = () => {
+        const winner = findPliWinner(game.board, game.atout);
+
+        console.log(winner);
+    };
+
     const pickUp = () => {
         const team = players.find((p) => p.name == me).team;
         const currentBoard = game.board;
+        const pliWinner = findPliWinner(currentBoard, game.atout);
         let plis = game[team] || [];
         plis.push(JSON.stringify(currentBoard));
 
-        gameRef.update({[team]: plis, lastPli: currentBoard, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
+        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: pliWinner, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false}).then(() => {
             let batch = db.batch();
             players.map((p) => batch.update(p.ref, {canPlay: game.nbPlis < 8}));
             batch.commit();
@@ -119,6 +127,7 @@
             </div>
             {#if game.toPick}
                 <div id="pickup">
+                    <button on:click={temp}>TEMP</button>
                     <button on:click={pickUp} id="btn-pickup" class="btn btn-block btn-large waves-effect waves-light">Ramasser le pli</button>
                 </div>
             {/if}

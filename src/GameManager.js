@@ -17,6 +17,7 @@ export function createGame(started = false, deck = null) {
     nbPlis: 0,
     atout: null,
     lastPli: null,
+    currentPlayer: null,
   };
 }
 
