@@ -386,6 +386,12 @@ button:focus {
 	background: black;
 }
 
+#dealer {
+	background: #4caf50;
+	padding: 5px;
+	font-weight: bold;
+}
+
 @media screen and (max-width: 480px) {
 	#choose-player {
 		margin-top: 150px;

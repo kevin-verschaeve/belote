@@ -35,7 +35,9 @@
         }
 
         newGame.takeableCard = getOneCard(newGame.deck);
-        newGame.currentPlayer = players[Math.floor(Math.random() * players.length)].name;
+        const dealer = players[Math.floor(Math.random() * players.length)];
+        newGame.dealer = dealer.name;
+        newGame.currentPlayer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1)).name;
 
         batch.commit().then(() => {
             db.doc(`games/${params.game}`).set(newGame).then(() => push(`/game/${params.game}/play`));

@@ -64,30 +64,33 @@
         <GameCount {game} {gameRef} {players}/>
     {:else}
         {#if me && isPlayer(players, me)}
-            <div id="players" class:deal-complete={game.dealComplete}>
-                {#each reOrderPlayers(players) as player, i}
-                    <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
-                        <p>
-                            {player.name} {#if game.currentPlayer == player.name}*{/if}
-                            {#if me == player.name}
-                                <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
-                            {/if}
-                        </p>
-                        <div class="player-cards">
-                            {#each sortCards(player.cards, game.atout) as card}
-                                <div class="card-wrapper">
-                                    {#if me == player.name}
-                                        <Card {card} playable={player.hasCancelledACard || me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
-                                    {:else}
-                                        <div class="playing-card playing-card-hidden"></div>
-                                    {/if}
-                                </div>
-                            {/each}
-                        </div>
+        <div id="players" class:deal-complete={game.dealComplete}>
+            {#each reOrderPlayers(players) as player, i}
+                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
+                    <p>
+                        {player.name} {#if game.currentPlayer == player.name}*{/if}
+                        {#if me == player.name}
+                            <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
+                        {/if}
+                        {#if game.dealer == player.name}
+                            <span id="dealer" class="text right">Dealer</span>
+                        {/if}
+                    </p>
+                    <div class="player-cards">
+                        {#each sortCards(player.cards, game.atout) as card}
+                            <div class="card-wrapper">
+                                {#if me == player.name}
+                                    <Card {card} playable={player.hasCancelledACard || me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
+                                {:else}
+                                    <div class="playing-card playing-card-hidden"></div>
+                                {/if}
+                            </div>
+                        {/each}
                     </div>
-                {/each}
-            </div>
-            <Board {game} {gameRef} {players} on:cancelCard={() => canPlay = true}/>
+                </div>
+            {/each}
+        </div>
+        <Board {game} {gameRef} {players}on:cancelCard={() => canPlay = true}/>
         {:else}
             <div id="choose-player" class="box container">
                 <div class="row center-align">
