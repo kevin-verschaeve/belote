@@ -10,7 +10,7 @@
     let name = '';
 
     const addPlayer = (playersRef, length) => {
-        playersRef.add({name, pos: length + 1});
+        playersRef.add({name, pos: length + 1, hasCancelledACard: false});
         name = '';
     };
 

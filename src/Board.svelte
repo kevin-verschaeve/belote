@@ -56,8 +56,7 @@
         const cards = player.cards;
         cards.push(card);
 
-        // todo: new field when canceled ??
-        player.ref.update({cards: cards}).then(() => {
+        player.ref.update({cards: cards, hasCancelledACard: true}).then(() => {
             let board = game.board;
             const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];

@@ -22,8 +22,7 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        // todo: if card canceled, bypass this
-        if (game.currentPlayer !== player.name || !canPlay) {
+        if (!player.hasCancelledACard && game.currentPlayer !== player.name || !canPlay) {
             return;
         }
 
@@ -34,11 +33,13 @@
                 const board = g.data().board;
                 board.push(card);
 
-                // todo: do not if someone canceled a card then replayed
-                const currentPlayer = players.find((p) => p.pos == (player.pos + 1 > 3 ? 0 : player.pos + 1)).name;
+                let currentPlayer = game.currentPlayer;
+                if (!player.hasCancelledACard) {
+                    currentPlayer = players.find((p) => p.pos == (player.pos + 1 > 3 ? 0 : player.pos + 1)).name;
+                }
 
                 const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
-                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)]});
+                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], hasCancelledACard: false});
                 transaction.update(g.ref, {board: board, toPick: board.length == 4, currentPlayer});
             });
         });
@@ -76,7 +77,7 @@
                             {#each sortCards(player.cards, game.atout) as card}
                                 <div class="card-wrapper">
                                     {#if me == player.name}
-                                        <Card {card} playable={me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
+                                        <Card {card} playable={player.hasCancelledACard || me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
                                     {:else}
                                         <div class="playing-card playing-card-hidden"></div>
                                     {/if}
