@@ -383,7 +383,7 @@ button:focus {
 }
 
 .player-turn {
-	background: black;
+	border: 3px solid #cdb129;
 }
 
 #dealer {
