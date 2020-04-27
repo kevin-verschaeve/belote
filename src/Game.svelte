@@ -17,9 +17,7 @@
         me = player.name;
     };
 
-    const isPlayer = (players, name) => {
-        return players.findIndex((p) => p.name == name) > -1;
-    };
+    const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card) => {
         if (!player.canPlay) {

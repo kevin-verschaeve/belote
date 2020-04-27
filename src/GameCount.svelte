@@ -38,14 +38,14 @@
         <button on:click={next(players, game, gameRef)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
 
         <div id="final-score">
-            <TeamScore plis={game.NS} team={'NS'} {players}/>
+            <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')}/>
             <div>
                 <p class="text">{game.taker}</p>
                 <div class="playing-card mini">
                     <div class="suit {game.atout}"></div>
                 </div>
             </div>
-            <TeamScore plis={game.EW} team={'EW'} {players}/>
+            <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')}/>
         </div>
     </Collection>
     {:else}

@@ -43,9 +43,7 @@
         });
     };
 
-    const addToTeam = (team, player) => {
-        player.ref.update({team});
-    };
+    const addToTeam = (team, player) => player.ref.update({team});
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>

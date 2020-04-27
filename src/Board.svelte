@@ -47,9 +47,7 @@
     };
 
     function goToCount() {
-        gameRef.update({finished: true}).then(() => {
-            push(`/game/${gameRef.id}/count`);
-        });
+        gameRef.update({finished: true}).then(() => push(`/game/${gameRef.id}/count`));
     }
 
     function cancelCard(card) {
