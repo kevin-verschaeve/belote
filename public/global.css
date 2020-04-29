@@ -308,6 +308,10 @@ button:focus {
 	padding-top: 10px;
 }
 
+.played-card-player.last-pli-card {
+	color: var(--secondary-text-color);
+}
+
 #pickup {
 	margin-top: 50px;
 }
@@ -347,6 +351,7 @@ button:focus {
 
 #modal-last-pli {
 	color: var(--secondary-text-color);
+	height: 250px;
 }
 
 #btn-pickup {

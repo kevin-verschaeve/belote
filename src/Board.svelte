@@ -149,7 +149,9 @@
         </h4>
         <div class="player-cards">
             {#each game.lastPli as card}
-                <Card {card}/>
+                <Card {card}>
+                    <p class="played-card-player last-pli-card">{card.player}</p>
+                </Card>
             {/each}
         </div>
     </div>
