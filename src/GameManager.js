@@ -11,7 +11,6 @@ export function createGame(started = false, deck = null) {
     board: [],
     NS: [],
     EW: [],
-    finished: false,
     started: started,
     dealComplete: false,
     taker: null,

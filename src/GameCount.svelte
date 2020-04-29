@@ -1,17 +1,18 @@
 <script>
-    import { Collection, Doc } from "sveltefire";
     import { getContext } from 'svelte';
-    import { push } from 'svelte-spa-router'
     import { createGame, dealPreGame } from './GameManager.js';
     import { getOneCard, cutDeck } from './DeckManager.js';
     import TeamScore from './TeamScore.svelte';
-    export let params;
+
+    export let game;
+    export let gameRef;
+    export let players;
 
     const db = getContext('firebase').firestore();
 
     let shuffle = false;
 
-    const next = (players, game, gameRef) => {
+    const next = () => {
         let deck = null;
         if (!shuffle) {
             deck = [];
@@ -22,33 +23,27 @@
         const newGame = createGame(true, deck);
         newGame.deck = dealPreGame(players, newGame.deck);
         newGame.takeableCard = getOneCard(newGame.deck);
-        gameRef.set(newGame).then(() => push(`/game/${params.game}/play`));
+        gameRef.set(newGame);
     };
 </script>
 
-<Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
-    {#if game.finished}
-    <h2 class="center-align text">Score</h2>
-    <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef}>
-        <label>
-            <input type="checkbox" bind:value={shuffle} class="filled-in">
-            <span class="text">Mélanger ?</span>
-        </label>
-        <br>
-        <button on:click={next(players, game, gameRef)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
+<h2 class="center-align text">Score</h2>
+<div>
+    <label>
+        <input type="checkbox" bind:value={shuffle} class="filled-in">
+        <span class="text">Mélanger ?</span>
+    </label>
+    <br>
+    <button on:click={next} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
 
-        <div id="final-score">
-            <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')}/>
-            <div>
-                <p class="text">{game.taker}</p>
-                <div class="playing-card mini">
-                    <div class="suit {game.atout}"></div>
-                </div>
+    <div id="final-score">
+        <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')}/>
+        <div>
+            <p class="text">{game.taker}</p>
+            <div class="playing-card mini">
+                <div class="suit {game.atout}"></div>
             </div>
-            <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')}/>
         </div>
-    </Collection>
-    {:else}
-        {push(`/game/${params.game}/play`)}
-    {/if}
-</Doc>
+        <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')}/>
+    </div>
+</div>

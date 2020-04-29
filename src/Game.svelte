@@ -1,9 +1,11 @@
 <script>
-    import { Doc, Collection } from "sveltefire";
-    import { getContext, onMount, createEventDispatcher } from 'svelte';
-    import { sortCards } from './DeckManager.js';
+    import {Doc, Collection} from "sveltefire";
+    import {getContext, onMount, createEventDispatcher} from 'svelte';
+    import {sortCards} from './DeckManager.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
+    import GameCount from "./GameCount.svelte";
+
     export let params;
 
     const db = getContext('firebase').firestore();
@@ -51,44 +53,48 @@
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
     <Collection path={gameRef.collection('players')} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')}>
-    {#if me && isPlayer(players, me)}
-        <div id="players" class:deal-complete={game.dealComplete}>
-            {#each reOrderPlayers(players) as player, i}
-                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name}>
-                    <p>
-                        {player.name}
-                        {#if me == player.name}
-                            <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
-                        {/if}
-                    </p>
-                    <div class="player-cards">
-                        {#each sortCards(player.cards, game.atout) as card}
-                            <div class="card-wrapper">
-                                {#if me == player.name}
-                                    <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card)} />
-                                {:else}
-                                    <div class="playing-card playing-card-hidden"></div>
-                                {/if}
-                            </div>
-                        {/each}
-                    </div>
-                </div>
-            {/each}
-        </div>
-        <Board {game} {gameRef} {players}/>
+    {#if game.nbPlis >= 8}
+        <GameCount {game} {gameRef} {players}/>
     {:else}
-        <div id="choose-player" class="box container">
-            <div class="row center-align">
-                <h3>Qui êtes-vous ?</h3>
-            </div>
-            <div class="row">
-                {#each players as player}
-                    <div class="col s3 center-align">
-                        <button class="btn waves-effect waves-light" on:click={setPlayer(player)}>{player.name}</button>
+        {#if me && isPlayer(players, me)}
+            <div id="players" class:deal-complete={game.dealComplete}>
+                {#each reOrderPlayers(players) as player, i}
+                    <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name}>
+                        <p>
+                            {player.name}
+                            {#if me == player.name}
+                                <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
+                            {/if}
+                        </p>
+                        <div class="player-cards">
+                            {#each sortCards(player.cards, game.atout) as card}
+                                <div class="card-wrapper">
+                                    {#if me == player.name}
+                                        <Card {card} playable={player.canPlay} on:click={play(game, gameRef, player, card)} />
+                                    {:else}
+                                        <div class="playing-card playing-card-hidden"></div>
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
                     </div>
                 {/each}
             </div>
-        </div>
+            <Board {game} {gameRef} {players}/>
+        {:else}
+            <div id="choose-player" class="box container">
+                <div class="row center-align">
+                    <h3>Qui êtes-vous ?</h3>
+                </div>
+                <div class="row">
+                    {#each players as player}
+                        <div class="col s3 center-align">
+                            <button class="btn waves-effect waves-light" on:click={setPlayer(player)}>{player.name}</button>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {/if}
     {/if}
     </Collection>
 </Doc>

@@ -46,10 +46,6 @@
         });
     };
 
-    function goToCount() {
-        gameRef.update({finished: true}).then(() => push(`/game/${gameRef.id}/count`));
-    }
-
     function cancelCard(card) {
         const player = players.find((p) => p.name == card.player);
         const cards = player.cards;
@@ -103,9 +99,6 @@
                 <div id="pickup">
                     <button on:click={pickUp} id="btn-pickup" class="btn btn-block btn-large waves-effect waves-light">Ramasser le pli</button>
                 </div>
-            {/if}
-            {#if game.nbPlis >= 8}
-                <button on:click={goToCount} class="btn btn-block btn-large waves-effect waves-light">Compter</button>
             {/if}
         </div>
     {:else}
