@@ -18,18 +18,19 @@
     let me = localStorage.getItem('me');
 
     const setTaker = () => {
-        gameRef.update({taker: me, atout: atout || game.takeableCard.suit}).then(() => {
-            atout = null;
-            for (let player of players) {
-                if (player.name == me) {
-                    game.takeableCard.player = player.name;
-                    player.cards.push(...[...getPlayerCards(game.deck, 2, player.name), game.takeableCard]);
-                } else {
-                    player.cards.push(...getPlayerCards(game.deck, 3, player.name));
-                }
-                player.ref.update({cards: player.cards, canPlay: true});
-                gameRef.update({deck: game.deck, dealComplete: true});
+        const batch = db.batch();
+        for (let player of players) {
+            if (player.name == me) {
+                game.takeableCard.player = player.name;
+                player.cards.push(...[...getPlayerCards(game.deck, 2, player.name), game.takeableCard]);
+            } else {
+                player.cards.push(...getPlayerCards(game.deck, 3, player.name));
             }
+            batch.update(player.ref, {cards: player.cards, canPlay: true});
+        }
+
+        batch.commit().then(() => {
+            gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit});
         });
     };
 
