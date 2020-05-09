@@ -66,6 +66,26 @@
         newGame.takeableCard = getOneCard(newGame.deck);
         gameRef.set(newGame);
     }
+
+    const findPlayerPos = (name) => {
+        if (name == me) {
+            return 'south';
+        }
+
+        const iam = players.find((p) => p.name == me);
+        const mate = players.find((p) => p.team == iam.team && p.name != iam.name);
+
+        if (mate.name == name) {
+            return 'north';
+        }
+
+        const opponent = players.find((p) => p.team != iam.team && p.pos == (iam.pos + 1 > 3 ? 0 : iam.pos + 1));
+        if (opponent.name == name) {
+            return 'west';
+        }
+
+        return 'east';
+    };
 </script>
 
 <div id="board">
@@ -86,7 +106,7 @@
         <div id="card-board">
             <div class="player-cards">
             {#each game.board as card}
-                <Card {card}>
+                <Card {card} pos={findPlayerPos(card.player)}>
                     <p class="played-card-player">{card.player}</p>
                     <div slot="cancel" class="cancel-card">
                     {#if me == card.player}
