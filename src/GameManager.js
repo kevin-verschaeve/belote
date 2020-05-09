@@ -1,4 +1,5 @@
 import { getDeck, getPlayerCards } from "./DeckManager";
+import { getContext } from 'svelte';
 
 export function createGame(started = false, deck = null) {
   if (null === deck) {
@@ -22,21 +23,37 @@ export function createGame(started = false, deck = null) {
   };
 }
 
-export function dealPreGame(players, deck = null) {
-    if (null === deck) {
-      deck = getDeck();
-    }
+export function dealPreGame(players, dealer, deck = null) {
+  const batch = getContext('firebase').firestore().batch();
 
-    const playersCards = {1: [], 2: [], 3: [], 4: []};
+  if (null === deck) {
+    deck = getDeck();
+  }
 
-    for (let i in players) {
-      playersCards[i] = getPlayerCards(deck, 3, players[i].name);
-    }
+  const playersFromDealer = reorderPlayersFromDealer(players, dealer);
+  const cards = {0: [], 1: [], 2: [], 3:[]};
 
-    for (let i in players) {
-      playersCards[i].push(...getPlayerCards(deck, 2, players[i].name));
-      players[i].ref.update({cards: playersCards[i]});
-    }
+  for (let i in playersFromDealer) {
+    cards[i] = getPlayerCards(deck, 3, playersFromDealer[i].name);
+  }
 
-    return deck;
+  for (let i in playersFromDealer) {
+    cards[i].push(...getPlayerCards(deck, 2, playersFromDealer[i].name));
+    batch.update(playersFromDealer[i].ref, {cards: cards[i]});
+  }
+
+  batch.commit();
+
+  return deck;
+}
+
+function reorderPlayersFromDealer(players, dealer) {
+  const west = players.find((p) => p.team != dealer.team && p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
+
+  return [
+    west,
+    players.find((p) => p.team == dealer.team && p.name != dealer.name),
+    players.find((p) => p.team == west.team && p.name != west.name),
+    dealer,
+  ];
 }

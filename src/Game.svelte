@@ -1,7 +1,7 @@
 <script>
-    import {Doc, Collection} from "sveltefire";
-    import {getContext, onMount, createEventDispatcher} from 'svelte';
-    import {sortCards} from './DeckManager.js';
+    import { Doc, Collection } from "sveltefire";
+    import { getContext, onMount, createEventDispatcher } from 'svelte';
+    import { sortCards } from './DeckManager.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
     import GameCount from "./GameCount.svelte";
@@ -22,7 +22,7 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        if (!player.hasCancelledACard && game.currentPlayer !== player.name || !canPlay) {
+        if ((!player.hasCancelledACard && game.currentPlayer !== player.name) || !canPlay) {
             return;
         }
 
@@ -73,7 +73,7 @@
                             <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
                         {/if}
                         {#if game.dealer == player.name}
-                            <span id="dealer" class="text right">Dealer</span>
+                            <span id="dealer" class="text">Dealer</span>
                         {/if}
                     </p>
                     <div class="player-cards">
@@ -90,7 +90,7 @@
                 </div>
             {/each}
         </div>
-        <Board {game} {gameRef} {players}on:cancelCard={() => canPlay = true}/>
+        <Board {game} {gameRef} {players} on:allowPlay={() => canPlay = true}/>
         {:else}
             <div id="choose-player" class="box container">
                 <div class="row center-align">

@@ -10,13 +10,13 @@
     let name = '';
 
     const addPlayer = (playersRef, length) => {
-        playersRef.add({name, pos: length + 1, hasCancelledACard: false});
+        playersRef.add({name, pos: length, hasCancelledACard: false});
         name = '';
     };
 
     const start = (players) => {
         const newGame = createGame();
-        newGame.deck = dealPreGame(players);
+        const dealer = players[Math.floor(Math.random() * players.length)];
 
         const buffer = {NS: [], EW: []};
         for (let p of players) {
@@ -30,14 +30,14 @@
         const newPlayers = [buffer.NS[0], buffer.EW[0], buffer.NS[1], buffer.EW[1]];
         const batch = db.batch();
 
+        newGame.deck = dealPreGame(newPlayers, dealer);
         for (let player of players) {
             batch.update(player.ref, {pos: newPlayers.findIndex((p) => p.name == player.name)});
         }
 
         newGame.takeableCard = getOneCard(newGame.deck);
-        const dealer = players[Math.floor(Math.random() * players.length)];
         newGame.dealer = dealer.name;
-        newGame.currentPlayer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1)).name;
+        newGame.currentPlayer = newPlayers.find((p) => p.team != dealer.team && p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1)).name;
 
         batch.commit().then(() => {
             db.doc(`games/${params.game}`).set(newGame).then(() => push(`/game/${params.game}/play`));

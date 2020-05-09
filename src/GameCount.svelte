@@ -21,11 +21,11 @@
         }
 
         const newGame = createGame(true, deck);
-        newGame.deck = dealPreGame(players, newGame.deck);
-        newGame.takeableCard = getOneCard(newGame.deck);
-
         const dealer = players.find((p) => p.name == game.dealer);
         const newDealer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
+
+        newGame.deck = dealPreGame(players, newDealer, newGame.deck);
+        newGame.takeableCard = getOneCard(newGame.deck);
         newGame.dealer = newDealer.name;
         newGame.currentPlayer = players.find((p) => p.pos == (newDealer.pos + 1 > 3 ? 0 : newDealer.pos + 1)).name;
 

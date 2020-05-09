@@ -35,20 +35,21 @@
         });
     };
 
-    const temp = () => {
-        const winner = findPliWinner(game.board, game.atout);
-
-        console.log(winner);
-    };
-
     const pickUp = () => {
-        const team = players.find((p) => p.name == me).team;
         const currentBoard = game.board;
-        const pliWinner = findPliWinner(currentBoard, game.atout);
-        let plis = game[team] || [];
+
+        // JS.Puke(true);
+        // findPliWinner needs to update a card property, but we don't want it do be actually updated in the original game board array
+        // This is the only solution I found
+        // .slice(), [...array], $.extend did not work
+        const pliWinner = findPliWinner(JSON.parse(JSON.stringify(currentBoard)), game.atout);
+
+        const team = players.find((p) => p.name == pliWinner).team;
+        const plis = game[team] || [];
         plis.push(JSON.stringify(currentBoard));
 
         gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: pliWinner, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false});
+        dispatch('allowPlay');
     };
 
     function cancelCard(card) {
@@ -61,17 +62,17 @@
             const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];
             gameRef.update({board: board, toPick: board.length == 4});
-            dispatch('cancelCard');
+            dispatch('allowPlay');
         });
     }
 
     function restart() {
         const newGame = createGame();
-        newGame.deck = dealPreGame(players);
-        newGame.takeableCard = getOneCard(newGame.deck);
-
         const dealer = players.find((p) => p.name == game.dealer);
         const newDealer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
+
+        newGame.deck = dealPreGame(players, newDealer);
+        newGame.takeableCard = getOneCard(newGame.deck);
         newGame.dealer = newDealer.name;
         newGame.currentPlayer = players.find((p) => p.pos == (newDealer.pos + 1 > 3 ? 0 : newDealer.pos + 1)).name;
 
@@ -129,7 +130,6 @@
             </div>
             {#if game.toPick}
                 <div id="pickup">
-                    <button on:click={temp}>TEMP</button>
                     <button on:click={pickUp} id="btn-pickup" class="btn btn-block btn-large waves-effect waves-light">Ramasser le pli</button>
                 </div>
             {/if}
