@@ -12,7 +12,7 @@
     const dispatch = createEventDispatcher();
     onMount(() => dispatch('routeEvent', {titleInCorner: true}));
 
-    let myCards;
+    let myCards, canPlay = true;
     let me = localStorage.getItem('me');
     const setPlayer = (player) => {
         localStorage.setItem('me', player.name);
@@ -22,9 +22,11 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card) => {
-        if (!player.canPlay) {
+        if (!player.canPlay || !canPlay) {
             return;
         }
+
+        canPlay = false;
 
         db.runTransaction((transaction) => {
             return transaction.get(gameRef).then((g) => {
@@ -80,7 +82,7 @@
                     </div>
                 {/each}
             </div>
-            <Board {game} {gameRef} {players}/>
+            <Board {game} {gameRef} {players} on:cancelCard={() => canPlay = true}/>
         {:else}
             <div id="choose-player" class="box container">
                 <div class="row center-align">

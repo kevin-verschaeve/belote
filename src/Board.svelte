@@ -1,6 +1,5 @@
 <script>
-    import { getContext, afterUpdate } from 'svelte';
-    import { push } from 'svelte-spa-router';
+    import { getContext, afterUpdate, createEventDispatcher } from 'svelte';
     import { getOneCard, getPlayerCards, suits } from './DeckManager.js';
     import { createGame, dealPreGame } from './GameManager.js';
     import Card from './Card.svelte';
@@ -11,6 +10,7 @@
 
     const firebase = getContext('firebase');
     const db = firebase.firestore();
+    const dispatch = createEventDispatcher();
 
     afterUpdate(() => M.AutoInit());
 
@@ -57,6 +57,7 @@
             const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];
             gameRef.update({board: board, toPick: board.length == 4});
+            dispatch('cancelCard');
         });
     }
 
