@@ -1,8 +1,7 @@
 :root {
 	--main-text-color: #FFF;
 	--secondary-text-color: #000;
-	--color-red-card: #d90000;
-	--color-black-card: #000;
+	--suits-image-path: url(suits.png);
 }
 
 html, body {
@@ -13,7 +12,6 @@ html, body {
 
 body {
 	color: #333;
-	/*background-image: url(bg-body.png);*/
 	background: radial-gradient(#02a920, #003006);
 	margin: 0;
 	padding: 10px 50px;
@@ -169,53 +167,61 @@ button:focus {
 	text-align: right;
 }
 
+.small-suit {
+	width: 10px;
+	height: 10px;
+}
 .small-suit.top {
 	position: absolute;
-	top: 25px;
+	top: 28px;
 	left: 5px;
 }
 .small-suit.bottom {
 	position: absolute;
-	bottom: 27px;
-	right: 5px;
+	bottom: 29px;
+	right: 3px;
 }
 
 .playing-card .suit {
 	height: 50px;
 	width: 45px;
-	border-radius: 5px;
-	text-align: center;
 	margin: 0 auto;
-	font-size: 4em;
-	line-height: 0.8;
 }
 
-.suit.hearts.bottom:before,
-.suit.hearts.top:before,
-.playing-card .hearts:before {
-	content: '♥';
-	color: var(--color-red-card);
+.playing-card .suit.hearts {
+	background: var(--suits-image-path) 48px 0;
 }
 
-.suit.diamonds.bottom:before,
-.suit.diamonds.top:before,
-.playing-card .diamonds:before {
-	content: '◆';
-	color: var(--color-red-card);
+.playing-card .suit.diamonds {
+	background: var(--suits-image-path) 2px 50px;
 }
 
-.suit.clubs.bottom:before,
-.suit.clubs.top:before,
-.playing-card .clubs:before {
-	content: '♣';
-	color: var(--color-black-card);
+.playing-card .suit.spades {
+	background: var(--suits-image-path) 2px 0;
 }
 
-.suit.spades.bottom:before,
-.suit.spades.top:before,
-.playing-card .spades:before {
-	content: '♠';
-	color: var(--color-black-card);
+.playing-card .suit.clubs {
+	background: var(--suits-image-path) 47px 48px;
+}
+
+.small-suit.hearts.bottom,
+.small-suit.hearts.top {
+	background: var(--suits-image-path) -42px -50px;
+}
+
+.small-suit.diamonds.bottom,
+.small-suit.diamonds.top {
+	background: var(--suits-image-path) -42px -39px;
+}
+
+.small-suit.clubs.bottom,
+.small-suit.clubs.top {
+	background: var(--suits-image-path) -41px -60px;
+}
+
+.small-suit.spades.bottom,
+.small-suit.spades.top {
+	background: var(--suits-image-path) -42px -30px;
 }
 
 #board {
@@ -243,7 +249,7 @@ button:focus {
 }
 
 .selected-atout {
-	background: green;
+	border: 2px solid green;
 	padding: 4px;
 }
 
