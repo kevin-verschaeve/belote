@@ -1,5 +1,4 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
     import { quintInOut } from 'svelte/easing';
 
@@ -14,9 +13,6 @@
         south: {x: 0, y: 500},
         west: {x: -500, y: 0},
     };
-
-    const dispatch = createEventDispatcher();
-    const click = () => dispatch('click');
 </script>
 
 <div class="playing-card" class:playable class:takeable on:click transition:fly="{{duration: pos ? 300 : 0, ...map[pos], easing: quintInOut}}">

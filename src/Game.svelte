@@ -41,6 +41,7 @@
                 const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
                 player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], hasCancelledACard: false});
                 transaction.update(g.ref, {board: board, toPick: board.length == 4, currentPlayer});
+                canPlay = true;
             });
         });
     };
