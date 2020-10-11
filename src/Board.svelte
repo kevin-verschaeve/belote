@@ -1,7 +1,7 @@
 <script>
-    import { getContext, afterUpdate, createEventDispatcher } from 'svelte';
-    import { getOneCard, getPlayerCards, suits } from './DeckManager.js';
-    import { createGame, dealPreGame } from './GameManager.js';
+    import { getContext, afterUpdate } from 'svelte';
+    import { getOneCard, suits } from './DeckManager.js';
+    import { createGame, dealPreGame, dealRest } from './GameManager.js';
     import { findPliWinner } from './PliManager.js';
     import Card from './Card.svelte';
 
@@ -11,7 +11,6 @@
 
     const firebase = getContext('firebase');
     const db = firebase.firestore();
-    const dispatch = createEventDispatcher();
 
     afterUpdate(() => M.AutoInit());
 
@@ -19,38 +18,34 @@
     let me = localStorage.getItem('me');
 
     const setTaker = () => {
-        const batch = db.batch();
-        for (let player of players) {
-            if (player.name == me) {
-                game.takeableCard.player = player.name;
-                player.cards.push(...[...getPlayerCards(game.deck, 2, player.name), game.takeableCard]);
-            } else {
-                player.cards.push(...getPlayerCards(game.deck, 3, player.name));
-            }
-            batch.update(player.ref, {cards: player.cards, canPlay: true});
-        }
-
-        batch.commit().then(() => {
+        dealRest(me, players, game).then(() => {
             gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit});
         });
     };
 
     const pickUp = () => {
         const currentBoard = game.board;
-
-        // JS.Puke(true);
-        // findPliWinner needs to update a card property, but we don't want it do be actually updated in the original game board array
-        // This is the only solution I found
-        // .slice(), [...array], $.extend did not work
-        const pliWinner = findPliWinner(JSON.parse(JSON.stringify(currentBoard)), game.atout);
-
-        const team = players.find((p) => p.name == pliWinner).team;
+        const team = players.find((p) => p.name == me).team;
         const plis = game[team] || [];
         plis.push(JSON.stringify(currentBoard));
 
-        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: pliWinner, board: [], nbPlis: firebase.firestore.FieldValue.increment(1), toPick: false});
-        dispatch('allowPlay');
+        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: me, board: [], nbPlis: game.nbPlis + 1, toPick: false});
     };
+
+    let iCanPickup;
+    $: {
+        if (game.toPick) {
+            // JS.Puke(true);
+            // findPliWinner needs to update a card property, but we don't want it do be actually updated in the original game board array
+            // This is the only solution I found
+            // .slice(), [...array], $.extend did not work
+            const pliWinner = findPliWinner(JSON.parse(JSON.stringify(game.board)), game.atout);
+
+            iCanPickup = me == pliWinner;
+        } else {
+            iCanPickup = false;
+        }
+    }
 
     function cancelCard(card) {
         const player = players.find((p) => p.name == card.player);
@@ -62,7 +57,6 @@
             const index = board.findIndex((c) => c.suit == card.suit && c.text == card.text);
             board = [...board.slice(0, index), ...board.slice(index + 1)];
             gameRef.update({board: board, toPick: board.length == 4});
-            dispatch('allowPlay');
         });
     }
 
@@ -128,7 +122,7 @@
                 </Card>
             {/each}
             </div>
-            {#if game.toPick}
+            {#if iCanPickup}
                 <div id="pickup">
                     <button on:click={pickUp} id="btn-pickup" class="btn btn-block btn-large waves-effect waves-light">Ramasser le pli</button>
                 </div>

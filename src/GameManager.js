@@ -47,8 +47,26 @@ export function dealPreGame(players, dealer, deck = null) {
   return deck;
 }
 
+export function dealRest(me, players, game) {
+  const batch = getContext('firebase').firestore().batch();
+  const dealer = players.find((p) => p.name == game.dealer);
+  const orderedPlayers = reorderPlayersFromDealer(players, dealer);
+
+  for (let player of orderedPlayers) {
+    if (player.name == me) {
+      game.takeableCard.player = player.name;
+      player.cards.push(...[...getPlayerCards(game.deck, 2, player.name), game.takeableCard]);
+    } else {
+      player.cards.push(...getPlayerCards(game.deck, 3, player.name));
+    }
+    batch.update(player.ref, {cards: player.cards, canPlay: true});
+  }
+
+  return batch.commit();
+}
+
 function reorderPlayersFromDealer(players, dealer) {
-  const west = players.find((p) => p.team != dealer.team && p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
+  const west = players.find((p) => p.team != dealer.team);
 
   return [
     west,

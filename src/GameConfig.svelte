@@ -39,9 +39,9 @@
         newGame.dealer = dealer.name;
         newGame.currentPlayer = newPlayers.find((p) => p.team != dealer.team && p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1)).name;
 
-        batch.commit().then(() => {
-            db.doc(`games/${params.game}`).set(newGame).then(() => push(`/game/${params.game}/play`));
-        });
+        batch.set(db.doc(`games/${params.game}`), newGame);
+
+        batch.commit().then(() => push(`/game/${params.game}/play`));
     };
 
     const addToTeam = (team, player) => player.ref.update({team});

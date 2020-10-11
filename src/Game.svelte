@@ -12,7 +12,6 @@
     const dispatch = createEventDispatcher();
     onMount(() => dispatch('routeEvent', {titleInCorner: true}));
 
-    let myCards, canPlay = true;
     let me = localStorage.getItem('me');
     const setPlayer = (player) => {
         localStorage.setItem('me', player.name);
@@ -22,15 +21,18 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        if ((!player.hasCancelledACard && game.currentPlayer !== player.name) || !canPlay) {
+        if (!player.hasCancelledACard && game.currentPlayer !== player.name) {
             return;
         }
-
-        canPlay = false;
 
         db.runTransaction((transaction) => {
             return transaction.get(gameRef).then((g) => {
                 const board = g.data().board;
+                if (board.find((c) => c.suit == card.suit && c.text == card.text)) {
+                  // prevent playing the same card twice by clicking too fast
+                  return;
+                }
+
                 board.push(card);
 
                 let currentPlayer = game.currentPlayer;
@@ -39,9 +41,8 @@
                 }
 
                 const index = player.cards.findIndex((c) => c.suit == card.suit && c.text == card.text);
-                player.ref.update({cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], hasCancelledACard: false});
+                transaction.update(player.ref, {cards: [...player.cards.slice(0, index), ...player.cards.slice(index + 1)], hasCancelledACard: false});
                 transaction.update(g.ref, {board: board, toPick: board.length == 4, currentPlayer});
-                canPlay = true;
             });
         });
     };
@@ -91,7 +92,7 @@
                 </div>
             {/each}
         </div>
-        <Board {game} {gameRef} {players} on:allowPlay={() => canPlay = true}/>
+        <Board {game} {gameRef} {players}/>
         {:else}
             <div id="choose-player" class="box container">
                 <div class="row center-align">
