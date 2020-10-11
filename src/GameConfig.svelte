@@ -49,87 +49,76 @@
 
 <Collection path={`games/${params.game}/players`} let:data={players} let:ref={playersRef} query={(ref) => ref.orderBy('pos')}>
     <section class="box">
-        <div class="row">
-            <ul class="no-style">
-                {#each players as player}
-                    {#if !player.team}
-                        <li>
-                            <div class="row">
-                                <div class="col s12">
-                                    <div class="card horizontal blue-grey darken-1 valign-wrapper">
-                                        <div class="card-content white-text">
-                                            <span class="card-title">{player.name}</span>
-                                        </div>
-                                        <div class="card-action no-border">
-                                            <a on:click={() => player.ref.delete()} title="Supprimer le joueur">Supprimer</a>
-                                            {#if !player.team}
-                                                <a on:click={addToTeam('NS', player)}>Equipe Nord / Sud</a>
-                                                <a on:click={addToTeam('EW', player)}>Equipe Est / Ouest</a>
-                                            {/if}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    {/if}
-                {/each}
-            </ul>
-        </div>
-        <div class="row">
-            <div class="col s12 m6"><h4>Equipe Nord / Sud</h4></div>
-            <div class="col s12 m6"><h4>Equipe Est / Ouest</h4></div>
-        </div>
-        <div class="row">
-            <div class="col s12 m6">
-                {#each players as player}
-                    {#if player.team === 'NS'}
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="card horizontal blue-grey darken-1 valign-wrapper">
-                                    <div class="card-content white-text">
-                                        <span class="card-title">{player.name}</span>
-                                    </div>
-                                    <div class="card-action no-border">
-                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur">Supprimer</a>
-                                        <a on:click={addToTeam('EW', player)}>Changer d'équipe</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {/if}
-                {/each}
-            </div>
-            <div class="col s12 m6">
-                {#each players as player}
-                    {#if player.team === 'EW'}
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="card horizontal blue-grey darken-1 valign-wrapper">
-                                    <div class="card-content white-text">
-                                        <span class="card-title">{player.name}</span>
-                                    </div>
-                                    <div class="card-action no-border">
-                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur">Supprimer</a>
-                                        <a on:click={addToTeam('NS', player)}>Changer d'équipe</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {/if}
-                {/each}
-            </div>
-        </div>
-    </section>
-    <br>
-    <section class="box">
         {#if players.length < 4}
             <div>
-                <span>Ajouter un joueur</span>
-                <input type="text" bind:value={name}>
+                <h5>Ajouter un joueur</h5>
+                <input type="text" bind:value={name} on:keydown={(e) => e.key == 'Enter' ? addPlayer(playersRef, players.length) : false} autofocus>
                 <button class="btn waves-effect waves-light" on:click={addPlayer(playersRef, players.length)}>Ajouter</button>
             </div>
         {:else}
             <button on:click={start(players)} class="btn waves-effect waves-light" type="submit" name="action">Lancer la partie</button>
         {/if}
+    </section>
+    <section class="box">
+        <div class="row">
+            {#each players as player}
+                {#if !player.team}
+                    <div class="col s6 m3">
+                        <div class="card grey lighten-5">
+                            <div class="card-content relative">
+                                <span class="card-title">{player.name}</span>
+                                <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                            </div>
+                            <div class="card-action">
+                                <a on:click={addToTeam('NS', player)} class="black-text">Équipe 1</a>
+                                <a on:click={addToTeam('EW', player)} class="black-text">Équipe 2</a>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+            {/each}
+        </div>
+        <div class="row">
+            <div class="col s12 m6">
+                <div class="row">
+                    <div class="col s12"><h4>Équipe 1</h4></div>
+                    {#each players as player}
+                        {#if player.team === 'NS'}
+                            <div class="col s12 m6">
+                                <div class="card grey lighten-5">
+                                    <div class="card-content relative">
+                                        <span class="card-title">{player.name}</span>
+                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                                    </div>
+                                    <div class="card-action black-text">
+                                        <a on:click={addToTeam('EW', player)} class="black-text pointer">Changer d'équipe</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {/if}
+                    {/each}
+                </div>
+            </div>
+            <div class="col s12 m6">
+                <div class="row">
+                    <div class="col s12"><h4>Équipe 2</h4></div>
+                    {#each players as player}
+                        {#if player.team === 'EW'}
+                            <div class="col s12 m6">
+                                <div class="card grey lighten-5">
+                                    <div class="card-content relative">
+                                        <span class="card-title">{player.name}</span>
+                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                                    </div>
+                                    <div class="card-action">
+                                        <a on:click={addToTeam('NS', player)} class="black-text pointer">Changer d'équipe</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {/if}
+                    {/each}
+                </div>
+            </div>
+        </div>
     </section>
 </Collection>
