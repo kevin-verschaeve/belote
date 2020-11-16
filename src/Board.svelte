@@ -2,7 +2,7 @@
     import { getContext, afterUpdate } from 'svelte';
     import { getOneCard, suits } from './DeckManager.js';
     import { createGame, dealPreGame, dealRest } from './GameManager.js';
-    import { findPliWinner } from './PliManager.js';
+    import { findPliWinner, countPointsInPli } from './PliManager.js';
     import Card from './Card.svelte';
 
     export let game;
@@ -19,6 +19,7 @@
 
     const setTaker = () => {
         dealRest(me, players, game).then(() => {
+            // todo, ajouter atout en param, detecter si belote, setter le param dans le game
             gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit});
         });
     };
@@ -27,9 +28,12 @@
         const currentBoard = game.board;
         const team = players.find((p) => p.name == me).team;
         const plis = game[team] || [];
+        const points = countPointsInPli(currentBoard, game.atout, (game.nbPlis + 1) == 8);
+
+        game.score[team] += points;
         plis.push(JSON.stringify(currentBoard));
 
-        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: me, board: [], nbPlis: game.nbPlis + 1, toPick: false});
+        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: me, board: [], nbPlis: game.nbPlis + 1, toPick: false, score: game.score});
     };
 
     let iCanPickup;
@@ -107,6 +111,8 @@
             {#if game.lastPli}
                 <button data-target="modal-last-pli" class="btn modal-trigger btn-block">Voir le dernier pli</button>
             {/if}
+            <span>{players.filter((p) => p.team == 'EW').map((p) => p.name).join(' / ')} : {game.score.EW}</span> <br>
+            <span>{players.filter((p) => p.team == 'NS').map((p) => p.name).join(' / ')} : {game.score.NS}</span>
         </div>
         {/if}
         <div id="card-board">

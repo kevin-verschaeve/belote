@@ -20,6 +20,12 @@ export function createGame(started = false, deck = null) {
     lastPli: null,
     currentPlayer: null,
     dealer: null,
+    score: {
+      NS: 0,
+      EW: 0,
+    },
+    belote: null,
+    litige: 0,
   };
 }
 

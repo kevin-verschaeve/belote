@@ -2,10 +2,13 @@
     import Card from "./Card.svelte";
     export let plis;
     export let players;
+    export let points;
+    export let realPoints;
 </script>
 
 <div class="plis-wrapper">
     <h3 class="text">{players.map((p) => p.name).join(' / ')}</h3>
+    <p class="center white-text flow-text">{points} points {#if points != realPoints} -> <b>{realPoints} points</b>{/if}</p>
     {#each plis as pli}
         <div class="pli">
             {#each JSON.parse(pli) as card}

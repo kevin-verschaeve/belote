@@ -2,6 +2,7 @@
     import { getContext } from 'svelte';
     import { createGame, dealPreGame } from './GameManager.js';
     import { getOneCard, cutDeck } from './DeckManager.js';
+    import { calculateRoundScores } from './PliManager.js';
     import TeamScore from './TeamScore.svelte';
 
     export let game;
@@ -9,6 +10,8 @@
     export let players;
 
     const db = getContext('firebase').firestore();
+
+    const scores = calculateRoundScores(game, players);
 
     let shuffle = false;
 
@@ -43,13 +46,13 @@
     <button on:click={next} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
 
     <div id="final-score">
-        <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')}/>
+        <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')} points={game.score.NS} realPoints={scores.NS} />
         <div>
             <p class="text">{game.taker}</p>
             <div class="playing-card mini">
                 <div class="suit {game.atout}"></div>
             </div>
         </div>
-        <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')}/>
+        <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')} points={game.score.EW} realPoints={scores.EW} />
     </div>
 </div>
