@@ -81,3 +81,16 @@ function reorderPlayersFromDealer(players, dealer) {
     dealer,
   ];
 }
+
+export function handleBelote(players, atout) {
+  let playerAtouts = [];
+  let belote = null;
+  for (let player of players) {
+      playerAtouts = player.cards.filter((c) => c.suit == atout).map((c) => c.text);
+      if (playerAtouts.includes('Q') && playerAtouts.includes('K')) {
+          belote = player.team;
+      }
+  }
+
+  return belote;
+}

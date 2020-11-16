@@ -43,7 +43,7 @@ export function countPointsInPli(pli, atout, der = false) {
   return total + (der ? 10 : 0);
 }
 
-// TODO : gerer la belote + les litiges
+// TODO : gerer les litiges
 
 export function calculateRoundScores(game, players) {
   const takerTeam = players.find((p) => p.name == game.taker).team;

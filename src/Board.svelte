@@ -1,7 +1,7 @@
 <script>
     import { getContext, afterUpdate } from 'svelte';
     import { getOneCard, suits } from './DeckManager.js';
-    import { createGame, dealPreGame, dealRest } from './GameManager.js';
+    import { createGame, dealPreGame, dealRest, handleBelote } from './GameManager.js';
     import { findPliWinner, countPointsInPli } from './PliManager.js';
     import Card from './Card.svelte';
 
@@ -19,8 +19,8 @@
 
     const setTaker = () => {
         dealRest(me, players, game).then(() => {
-            // todo, ajouter atout en param, detecter si belote, setter le param dans le game
-            gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit});
+            const belote = handleBelote(players, atout || game.takeableCard.suit);
+            gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit, belote});
         });
     };
 
