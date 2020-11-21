@@ -92,6 +92,10 @@
                 </div>
             {/each}
         </div>
+        <div id="infos">
+            <span>{players.filter((p) => p.team == 'EW').map((p) => p.name).join(' / ')} : {game.score.EW} / {game.globalScore.EW}</span> <br>
+            <span>{players.filter((p) => p.team == 'NS').map((p) => p.name).join(' / ')} : {game.score.NS} / {game.globalScore.NS}</span>
+        </div>
         <Board {game} {gameRef} {players}/>
         {:else}
             <div id="choose-player" class="box container">

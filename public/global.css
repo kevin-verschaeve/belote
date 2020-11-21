@@ -224,6 +224,12 @@ button:focus {
 	background: var(--suits-image-path) -42px -30px;
 }
 
+#infos {
+	position: absolute;
+	color: white;
+	right: 50px;
+}
+
 #board {
 	display: flex;
 	align-items: center;
@@ -417,6 +423,12 @@ button:focus {
 .btn-remove-player:hover {
 	text-decoration: none;
 	box-shadow: 0 0 4px black;
+}
+
+.score-points {
+	color: white;
+	text-align: center;
+	margin: 0;
 }
 
 @media screen and (max-width: 480px) {

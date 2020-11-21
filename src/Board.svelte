@@ -65,7 +65,7 @@
     }
 
     function restart() {
-        const newGame = createGame();
+        const newGame = createGame(false, null, game.globalScore);
         const dealer = players.find((p) => p.name == game.dealer);
         const newDealer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
 
@@ -111,8 +111,6 @@
             {#if game.lastPli}
                 <button data-target="modal-last-pli" class="btn modal-trigger btn-block">Voir le dernier pli</button>
             {/if}
-            <span>{players.filter((p) => p.team == 'EW').map((p) => p.name).join(' / ')} : {game.score.EW}</span> <br>
-            <span>{players.filter((p) => p.team == 'NS').map((p) => p.name).join(' / ')} : {game.score.NS}</span>
         </div>
         {/if}
         <div id="card-board">

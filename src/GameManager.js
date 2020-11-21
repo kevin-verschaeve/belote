@@ -1,7 +1,7 @@
 import { getDeck, getPlayerCards } from "./DeckManager";
 import { getContext } from 'svelte';
 
-export function createGame(started = false, deck = null) {
+export function createGame(started = false, deck = null, globalScore = {NS: 0, EW: 0}) {
   if (null === deck) {
     deck = getDeck();
   }
@@ -24,6 +24,7 @@ export function createGame(started = false, deck = null) {
       NS: 0,
       EW: 0,
     },
+    globalScore,
     belote: null,
     litige: 0,
   };
