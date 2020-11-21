@@ -168,24 +168,28 @@ button:focus {
 }
 
 .small-suit {
-	width: 10px;
-	height: 10px;
+	font-size: 20px;
 }
 .small-suit.top {
 	position: absolute;
-	top: 28px;
-	left: 5px;
+	line-height: 1;
+	top: 25px;
+	left: 4px;
 }
 .small-suit.bottom {
 	position: absolute;
-	bottom: 29px;
-	right: 3px;
+	bottom: 25px;
+	right: 4px;
 }
 
 .playing-card .suit {
 	height: 50px;
-	width: 45px;
+	width: 43px;
 	margin: 0 auto;
+}
+
+.playing-card.mini .suit {
+	width: 45px;
 }
 
 .playing-card .suit.hearts {
@@ -204,24 +208,28 @@ button:focus {
 	background: var(--suits-image-path) 47px 48px;
 }
 
-.small-suit.hearts.bottom,
-.small-suit.hearts.top {
-	background: var(--suits-image-path) -42px -50px;
+.small-suit.hearts.bottom:after,
+.small-suit.hearts.top:after {
+	content: '♥';
+	color: #D40C00;
 }
 
-.small-suit.diamonds.bottom,
-.small-suit.diamonds.top {
-	background: var(--suits-image-path) -42px -39px;
+.small-suit.diamonds.bottom:after,
+.small-suit.diamonds.top:after {
+	content: '♦';
+	color: #D40C00;
 }
 
-.small-suit.clubs.bottom,
-.small-suit.clubs.top {
-	background: var(--suits-image-path) -41px -60px;
+.small-suit.clubs.bottom:after,
+.small-suit.clubs.top:after {
+	content: '♣';
+	color: black;
 }
 
-.small-suit.spades.bottom,
-.small-suit.spades.top {
-	background: var(--suits-image-path) -42px -30px;
+.small-suit.spades.bottom:after,
+.small-suit.spades.top:after {
+	content: '♠';
+	color: black;
 }
 
 #infos {
