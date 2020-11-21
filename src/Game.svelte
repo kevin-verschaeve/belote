@@ -82,7 +82,7 @@
                         {#each sortCards(player.cards, game.atout) as card}
                             <div class="card-wrapper">
                                 {#if me == player.name}
-                                    <Card {card} playable={player.hasCancelledACard || me == game.currentPlayer} on:click={play(game, gameRef, player, card, players)} />
+                                    <Card {card} playable={player.hasCancelledACard || (me == game.currentPlayer && !game.toPick)} on:click={play(game, gameRef, player, card, players)} />
                                 {:else}
                                     <div class="playing-card playing-card-hidden"></div>
                                 {/if}
