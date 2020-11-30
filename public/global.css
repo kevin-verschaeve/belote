@@ -439,6 +439,12 @@ button:focus {
 	margin: 0;
 }
 
+#modal-win .modal-close {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
 @media screen and (max-width: 480px) {
 	#choose-player {
 		margin-top: 150px;
