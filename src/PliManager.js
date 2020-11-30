@@ -61,7 +61,7 @@ export function calculateRoundScores(game, players) {
       return {NS: 252 + (game.belote == 'NS' ? 20 : 0), EW: (game.belote == 'EW' ? 20 : 0), litige: false};
     }
 
-    const result = scoreNS - (162 + (game.belote == 'NS' ? 20 : 0)) / 2;
+    const result = scoreNS - (162 + (game.belote === null ? 0 : 20)) / 2;
 
     if (result >= 0) {
       return {NS: scoreNS, EW: scoreEW, litige: result == 0};
@@ -81,7 +81,7 @@ export function calculateRoundScores(game, players) {
       return {NS: game.belote == 'NS' ? 20 : 0, EW: 252 + (game.belote == 'EW' ? 20 : 0), litige: false};
     }
 
-    const result = scoreEW - (162 + (game.belote == 'EW' ? 20 : 0)) / 2;
+    const result = scoreEW - (162 + (game.belote === null ? 0 : 20)) / 2;
 
     if (result >= 0) {
       return {NS: scoreNS, EW: scoreEW, litige: result == 0};
