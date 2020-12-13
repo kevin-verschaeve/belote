@@ -27,6 +27,7 @@ export function createGame(started = false, deck = null, globalScore = {NS: 0, E
     globalScore,
     belote: null,
     litige: 0,
+    firstRoundSkipped: false,
   };
 }
 

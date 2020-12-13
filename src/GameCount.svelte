@@ -52,7 +52,7 @@
             deck = cutDeck(deck);
         }
 
-        const newGame = createGame(true, deck, isNew ? {NS: 0, EW: 0} : newGlobalScore);
+        const newGame = createGame(true, deck, isNew || !game.firstRoundSkipped ? {NS: 0, EW: 0} : newGlobalScore);
         const dealer = players.find((p) => p.name == game.dealer);
         const newDealer = players.find((p) => p.pos == (dealer.pos + 1 > 3 ? 0 : dealer.pos + 1));
 
@@ -60,6 +60,7 @@
         newGame.takeableCard = getOneCard(newGame.deck);
         newGame.dealer = newDealer.name;
         newGame.currentPlayer = players.find((p) => p.pos == (newDealer.pos + 1 > 3 ? 0 : newDealer.pos + 1)).name;
+        newGame.firstRoundSkipped = !isNew;
 
         gameRef.set(newGame);
     };
