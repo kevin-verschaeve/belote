@@ -142,6 +142,10 @@ button:focus {
 	height: auto;
 	width: 55px;
 }
+.playing-card.big {
+	width: 100px;
+	height: 140px;
+}
 
 #suits-two .playing-card.mini {
 	margin-right: 5px;
@@ -166,6 +170,9 @@ button:focus {
 .playing-card .value.bottom {
 	text-align: right;
 }
+.playing-card.big .value.bottom {
+	margin-top: 10px;
+}
 
 .small-suit {
 	font-size: 20px;
@@ -181,11 +188,20 @@ button:focus {
 	bottom: 25px;
 	right: 4px;
 }
+.playing-card.big .small-suit {
+	font-size: 1.8em;
+}
+.playing-card.big .small-suit.bottom {
+	bottom: 20px;
+}
 
 .playing-card .suit {
 	height: 50px;
 	width: 45px;
 	margin: 0 auto;
+}
+.playing-card.big .suit {
+	margin-top: 15px;
 }
 
 .playing-card.mini .suit {
@@ -271,11 +287,11 @@ button:focus {
 
 .player-wrap {
 	padding: 10px;
+	padding-right: 35px;
 	margin-bottom: 10px;
 	border-radius: 10px;
 	color: var(--main-text-color);
 	position: fixed;
-	width: 485px;
 }
 
 .player-wrap.west {
@@ -292,6 +308,11 @@ button:focus {
 .player-wrap.north {
 	top: 10px;
 	left: 40%;
+}
+
+.player-wrap.south.big,
+.player-wrap.north.big {
+	left: 35%;
 }
 
 .player-wrap.east {

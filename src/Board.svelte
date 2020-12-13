@@ -16,7 +16,7 @@
 
     let atout;
     let me = localStorage.getItem('me');
-
+    $: big = localStorage.getItem('big');
     const setTaker = () => {
         dealRest(me, players, game).then(() => {
             const belote = handleBelote(players, atout || game.takeableCard.suit);
@@ -117,7 +117,7 @@
         <div id="card-board">
             <div class="player-cards">
             {#each game.board as card}
-                <Card {card} pos={findPlayerPos(card.player)}>
+                <Card {card} {big} pos={findPlayerPos(card.player)}>
                     <p class="played-card-player">{card.player}</p>
                     <div slot="cancel" class="cancel-card">
                     {#if me == card.player}

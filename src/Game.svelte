@@ -11,9 +11,14 @@
 
     const db = getContext('firebase').firestore();
     const dispatch = createEventDispatcher();
-    onMount(() => dispatch('routeEvent', {titleInCorner: true}));
+    let me;
+    let big = false;
+    onMount(() => {
+        dispatch('routeEvent', {titleInCorner: true});
+        big = localStorage.getItem('big');
+        me = localStorage.getItem('me');
+    });
 
-    let me = localStorage.getItem('me');
     const setPlayer = (player) => {
         localStorage.setItem('me', player.name);
         me = player.name;
@@ -59,6 +64,12 @@
             players.find((p) => p.team == west.team && p.name != west.name),
         ];
     };
+
+    const setBigCards = () => {
+        const newBig = 'true' === localStorage.getItem('big') ? false : true;
+        localStorage.setItem('big', newBig);
+        big = newBig;
+    };
 </script>
 
 <Doc path={`games/${params.game}`} let:data={game} let:ref={gameRef}>
@@ -69,10 +80,11 @@
         {#if me && isPlayer(players, me)}
         <div id="players" class:deal-complete={game.dealComplete}>
             {#each reOrderPlayers(players) as player, i}
-                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
+                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:big class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
                     <p>
                         {player.name} {#if game.currentPlayer == player.name}*{/if}
                         {#if me == player.name}
+                            <button on:click={() => setBigCards()}>big cards</button>
                             <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
                         {/if}
                         {#if game.dealer == player.name}
@@ -81,13 +93,11 @@
                     </p>
                     <div class="player-cards">
                         {#each sortCards(player.cards, game.atout) as card}
-                            <div class="card-wrapper">
-                                {#if me == player.name}
-                                    <Card {card} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
-                                {:else}
-                                    <div class="playing-card playing-card-hidden"></div>
-                                {/if}
-                            </div>
+                            {#if me == player.name}
+                                <Card {card} {big} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
+                            {:else}
+                                <div class="playing-card playing-card-hidden" class:big></div>
+                            {/if}
                         {/each}
                     </div>
                 </div>
