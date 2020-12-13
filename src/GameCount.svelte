@@ -72,7 +72,7 @@
 <h2 class="center-align text">Score</h2>
 <div>
     <label>
-        <input type="checkbox" bind:value={shuffle} class="filled-in">
+        <input type="checkbox" bind:checked={shuffle} class="filled-in">
         <span class="text">Mélanger ?</span>
     </label>
     <br>
