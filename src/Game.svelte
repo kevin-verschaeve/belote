@@ -2,6 +2,7 @@
     import { Doc, Collection } from "sveltefire";
     import { getContext, onMount, createEventDispatcher } from 'svelte';
     import { sortCards } from './DeckManager.js';
+    import IsCardPlayable from './IsCardPlayable.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
     import GameCount from "./GameCount.svelte";
@@ -21,7 +22,7 @@
     const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        if (!player.hasCancelledACard && game.currentPlayer !== player.name) {
+        if (!IsCardPlayable(game, players, player, card, me)) {
             return;
         }
 
@@ -82,7 +83,7 @@
                         {#each sortCards(player.cards, game.atout) as card}
                             <div class="card-wrapper">
                                 {#if me == player.name}
-                                    <Card {card} playable={player.hasCancelledACard || (me == game.currentPlayer && !game.toPick)} on:click={play(game, gameRef, player, card, players)} />
+                                    <Card {card} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
                                 {:else}
                                     <div class="playing-card playing-card-hidden"></div>
                                 {/if}

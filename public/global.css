@@ -247,6 +247,7 @@ button:focus {
 
 .playing-card.playable {
 	cursor: pointer;
+	bottom: 5px;
 }
 
 .btn-cancel-card:hover {
@@ -256,6 +257,7 @@ button:focus {
 .playing-card.playable:hover {
 	box-shadow: 0 0 18px 0 #000;
 	bottom: 10px;
+	background-color: #F8F8F8;
 }
 
 .playing-card.takeable {

@@ -2,7 +2,7 @@
     import { getContext, afterUpdate } from 'svelte';
     import { getOneCard, suits } from './DeckManager.js';
     import { createGame, dealPreGame, dealRest, handleBelote } from './GameManager.js';
-    import { findPliWinner, countPointsInPli } from './PliManager.js';
+    import { findBestCard, countPointsInPli } from './PliManager.js';
     import Card from './Card.svelte';
 
     export let game;
@@ -40,12 +40,12 @@
     $: {
         if (game.toPick) {
             // JS.Puke(true);
-            // findPliWinner needs to update a card property, but we don't want it do be actually updated in the original game board array
+            // findBestCard needs to update a card property, but we don't want it do be actually updated in the original game board array
             // This is the only solution I found
             // .slice(), [...array], $.extend did not work
-            const pliWinner = findPliWinner(JSON.parse(JSON.stringify(game.board)), game.atout);
+            const bestCard = findBestCard(JSON.parse(JSON.stringify(game.board)), game.atout);
 
-            iCanPickup = me == pliWinner;
+            iCanPickup = me == bestCard.player;
         } else {
             iCanPickup = false;
         }

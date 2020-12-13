@@ -1,4 +1,4 @@
-export function findPliWinner(pli, atout) {
+export function findBestCard(pli, atout) {
   const cardsWithAtout = pli.filter((card) => card.suit == atout);
 
   if (cardsWithAtout.length) {
@@ -9,16 +9,20 @@ export function findPliWinner(pli, atout) {
     });
   }
 
-  const bestCard = findBestCard(pli);
-
-  return bestCard.player;
-}
-
-function findBestCard(cards) {
-  const askedSuit = cards[0].suit;
-  const sorted = cards.filter((card) => card.suit == askedSuit).sort((a, b) => a.order > b.order ? -1 : 1);
+  const askedSuit = pli[0].suit;
+  const sorted = pli.filter((card) => card.suit == askedSuit).sort((a, b) => a.order > b.order ? -1 : 1);
 
   return sorted[0];
+}
+
+export function betterAtouts(bestCard, playerCards, atout) {
+  playerCards.map((card) => {
+    card.order = {3: 9, 4: 10}[card.order] || card.order;
+
+    return card;
+  });
+
+  return playerCards.filter((card) => card.suit == atout && card.order > bestCard.order);
 }
 
 export function countPointsInPli(pli, atout, der = false) {
