@@ -1,5 +1,5 @@
 <script>
-    import { getContext, afterUpdate } from 'svelte';
+    import { getContext, onMount } from 'svelte';
     import { getOneCard, suits } from './DeckManager.js';
     import { createGame, dealPreGame, dealRest, handleBelote } from './GameManager.js';
     import { findBestCard, countPointsInPli } from './PliManager.js';
@@ -12,7 +12,7 @@
     const firebase = getContext('firebase');
     const db = firebase.firestore();
 
-    afterUpdate(() => M.AutoInit());
+    onMount(() => M.AutoInit());
 
     let atout;
     let me = localStorage.getItem('me');
