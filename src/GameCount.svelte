@@ -10,10 +10,13 @@
     export let gameRef;
     export let players;
 
+    let animation = true;
+
     afterUpdate(() => {
-        if (newGlobalScore.NS > 1000 || newGlobalScore.EW > 1000) {
+        if (animation && (newGlobalScore.NS > 1000 || newGlobalScore.EW > 1000)) {
             M.AutoInit();
             M.Modal.getInstance(document.getElementById('modal-win')).open();
+            animation = false;
             const duration = 8 * 1000;
             const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1005 };
