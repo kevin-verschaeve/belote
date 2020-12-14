@@ -13,7 +13,7 @@
     let animation = true;
 
     afterUpdate(() => {
-        if (animation && (newGlobalScore.NS > 1000 || newGlobalScore.EW > 1000)) {
+        if (animation && (newGlobalScore.NS > game.goal || newGlobalScore.EW > game.goal)) {
             M.AutoInit();
             M.Modal.getInstance(document.getElementById('modal-win')).open();
             animation = false;
@@ -64,6 +64,7 @@
         newGame.dealer = newDealer.name;
         newGame.currentPlayer = players.find((p) => p.pos == (newDealer.pos + 1 > 3 ? 0 : newDealer.pos + 1)).name;
         newGame.firstRoundSkipped = !isNew;
+        newGame.goal = game.goal;
 
         gameRef.set(newGame);
     };
@@ -76,21 +77,35 @@
         <span class="text">Mélanger ?</span>
     </label>
     <br>
-    <button on:click={() => next(newGlobalScore.NS > 1000 || newGlobalScore.EW > 1000)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
+    <button on:click={() => next(newGlobalScore.NS > game.goal || newGlobalScore.EW > game.goal)} class="btn btn-block btn-large waves-effect waves-light">Manche suivante</button>
 
     <div id="final-score">
-        <TeamScore plis={game.NS} players={players.filter((p) => p.team == 'NS')} points={game.score.NS} realPoints={scores.NS} globalScore={newGlobalScore.NS}/>
+        <TeamScore
+            plis={game.NS}
+            players={players.filter((p) => p.team == 'NS')}
+            points={game.score.NS}
+            realPoints={scores.NS}
+            globalScore={newGlobalScore.NS}
+            goal={game.goal}
+        />
         <div>
             <p class="text">{game.taker}</p>
             <div class="playing-card mini">
                 <div class="suit {game.atout}"></div>
             </div>
         </div>
-        <TeamScore plis={game.EW} players={players.filter((p) => p.team == 'EW')} points={game.score.EW} realPoints={scores.EW} globalScore={newGlobalScore.EW}/>
+        <TeamScore
+            plis={game.EW}
+            players={players.filter((p) => p.team == 'EW')}
+            points={game.score.EW}
+            realPoints={scores.EW}
+            globalScore={newGlobalScore.EW}
+            goal={game.goal}
+        />
     </div>
 </div>
 
-{#if newGlobalScore.NS > 1000 || newGlobalScore.EW > 1000}
+{#if newGlobalScore.NS > game.goal || newGlobalScore.EW > game.goal}
 <div id="modal-win" class="modal center-align">
     <div class="modal-content relative">
         <h4>C'est gagné !</h4>

@@ -5,11 +5,12 @@
     export let points;
     export let realPoints;
     export let globalScore;
+    export let goal;
 </script>
 
 <div class="plis-wrapper">
     <h3 class="text">{players.map((p) => p.name).join(' / ')}</h3>
-    <p class="score-points">Partie : {globalScore} / 1000</p>
+    <p class="score-points">Partie : {globalScore} / {goal}</p>
     <p class="score-points">Manche : {points} points {#if points != realPoints} -> <b>{realPoints} points</b>{/if}</p>
     {#each plis as pli}
         <div class="pli">

@@ -8,6 +8,8 @@
 
     const db = getContext('firebase').firestore();
     let name = '';
+    let skipFirst = true;
+    let points = 1000;
 
     const addPlayer = (playersRef, length) => {
         playersRef.add({name, pos: length, hasCancelledACard: false});
@@ -16,6 +18,8 @@
 
     const start = (players) => {
         const newGame = createGame();
+        newGame.firstRoundSkipped = skipFirst;
+        newGame.goal = points;
         const dealer = players[Math.floor(Math.random() * players.length)];
 
         const buffer = {NS: [], EW: []};
@@ -58,6 +62,20 @@
         {:else}
             <button on:click={start(players)} class="btn waves-effect waves-light" type="submit" name="action">Lancer la partie</button>
         {/if}
+    </section>
+    <section class="box">
+        <div class="row">
+            <h5>Paramètres de partie</h5>
+            <label>
+                <input type="checkbox" bind:checked={skipFirst}>
+                <span>Ne pas compter la première partie</span>
+            </label>
+            Partie en
+            <div class="input-field inline">
+                <input id="game-points" type="number" class="validate" bind:value={points}>
+            </div>
+            points
+        </div>
     </section>
     <section class="box">
         <div class="row">

@@ -94,8 +94,8 @@
             {/each}
         </div>
         <div id="infos">
-            <span>{players.filter((p) => p.team == 'EW').map((p) => p.name).join(' / ')} : {game.score.EW} / {game.globalScore.EW}</span> <br>
-            <span>{players.filter((p) => p.team == 'NS').map((p) => p.name).join(' / ')} : {game.score.NS} / {game.globalScore.NS}</span>
+            <span>{players.filter((p) => p.team == 'EW').map((p) => p.name).join(' / ')} : {game.score.EW} ({game.globalScore.EW} / {game.goal})</span> <br>
+            <span>{players.filter((p) => p.team == 'NS').map((p) => p.name).join(' / ')} : {game.score.NS} ({game.globalScore.NS} / {game.goal})</span>
         </div>
         <Board {game} {gameRef} {players}/>
         {:else}

@@ -73,6 +73,7 @@
         newGame.takeableCard = getOneCard(newGame.deck);
         newGame.dealer = newDealer.name;
         newGame.firstRoundSkipped = game.firstRoundSkipped;
+        newGame.goal = game.goal;
         newGame.currentPlayer = players.find((p) => p.pos == (newDealer.pos + 1 > 3 ? 0 : newDealer.pos + 1)).name;
 
         gameRef.set(newGame);
