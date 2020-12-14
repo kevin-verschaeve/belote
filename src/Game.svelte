@@ -2,6 +2,7 @@
     import { Doc, Collection } from "sveltefire";
     import { getContext, onMount, createEventDispatcher } from 'svelte';
     import { sortCards } from './DeckManager.js';
+    import { bigCards } from './stores.js';
     import IsCardPlayable from './IsCardPlayable.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
@@ -11,9 +12,12 @@
 
     const db = getContext('firebase').firestore();
     const dispatch = createEventDispatcher();
-    onMount(() => dispatch('routeEvent', {titleInCorner: true}));
+    let me;
+    onMount(() => {
+        dispatch('routeEvent', {titleInCorner: true});
+        me = localStorage.getItem('me');
+    });
 
-    let me = localStorage.getItem('me');
     const setPlayer = (player) => {
         localStorage.setItem('me', player.name);
         me = player.name;
@@ -69,25 +73,30 @@
         {#if me && isPlayer(players, me)}
         <div id="players" class:deal-complete={game.dealComplete}>
             {#each reOrderPlayers(players) as player, i}
-                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
-                    <p>
+                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:big={$bigCards} class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
+                    <div>
                         {player.name} {#if game.currentPlayer == player.name}*{/if}
                         {#if me == player.name}
-                            <button type="button" on:click={() => me = null} class="btn-change-player text right" title="Je ne suis pas {player.name} !">⛔</button>
+                        <div>
+                            <ul id="player-menu" class="dropdown-content">
+                                <li><button>Fermer</button></li>
+                                <li><button on:click={() => bigCards.set(!$bigCards)}>{$bigCards ? 'Petites' : 'Grandes'} cartes</button></li>
+                                <li><button type="button" on:click={() => me = null}>Je ne suis pas {player.name} !</button></li>
+                            </ul>
+                            <button id="player-menu-trigger" class="dropdown-trigger " data-target="player-menu">⚙</button>
+                        </div>
                         {/if}
                         {#if game.dealer == player.name}
                             <span id="dealer" class="text">Dealer</span>
                         {/if}
-                    </p>
+                    </div>
                     <div class="player-cards">
                         {#each sortCards(player.cards, game.atout) as card}
-                            <div class="card-wrapper">
-                                {#if me == player.name}
-                                    <Card {card} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
-                                {:else}
-                                    <div class="playing-card playing-card-hidden"></div>
-                                {/if}
-                            </div>
+                            {#if me == player.name}
+                                <Card {card} big={$bigCards} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
+                            {:else}
+                                <div class="playing-card playing-card-hidden" class:big={$bigCards}></div>
+                            {/if}
                         {/each}
                     </div>
                 </div>

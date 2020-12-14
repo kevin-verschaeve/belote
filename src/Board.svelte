@@ -3,6 +3,7 @@
     import { getOneCard, suits } from './DeckManager.js';
     import { createGame, dealPreGame, dealRest, handleBelote } from './GameManager.js';
     import { findBestCard, countPointsInPli } from './PliManager.js';
+    import { bigCards } from './stores.js';
     import Card from './Card.svelte';
 
     export let game;
@@ -16,7 +17,6 @@
 
     let atout;
     let me = localStorage.getItem('me');
-
     const setTaker = () => {
         dealRest(me, players, game).then(() => {
             const belote = handleBelote(players, atout || game.takeableCard.suit);
@@ -118,7 +118,7 @@
         <div id="card-board">
             <div class="player-cards">
             {#each game.board as card}
-                <Card {card} pos={findPlayerPos(card.player)}>
+                <Card {card} big={$bigCards} pos={findPlayerPos(card.player)}>
                     <p class="played-card-player">{card.player}</p>
                     <div slot="cancel" class="cancel-card">
                     {#if me == card.player}
