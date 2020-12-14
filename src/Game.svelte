@@ -2,7 +2,7 @@
     import { Doc, Collection } from "sveltefire";
     import { getContext, onMount, createEventDispatcher } from 'svelte';
     import { sortCards } from './DeckManager.js';
-    import { bigCards } from './stores.js';
+    import { me, bigCards } from './stores.js';
     import IsCardPlayable from './IsCardPlayable.js';
     import Card from './Card.svelte';
     import Board from './Board.svelte';
@@ -12,21 +12,12 @@
 
     const db = getContext('firebase').firestore();
     const dispatch = createEventDispatcher();
-    let me;
-    onMount(() => {
-        dispatch('routeEvent', {titleInCorner: true});
-        me = localStorage.getItem('me');
-    });
+    onMount(() => dispatch('routeEvent', {titleInCorner: true}));
 
-    const setPlayer = (player) => {
-        localStorage.setItem('me', player.name);
-        me = player.name;
-    };
-
-    const isPlayer = (players, name) => players.findIndex((p) => p.name == name) > -1;
+    const isPlayer = (players) => players.findIndex((p) => p.name == $me) > -1;
 
     const play = (game, gameRef, player, card, players) => {
-        if (!IsCardPlayable(game, players, player, card, me)) {
+        if (!IsCardPlayable(game, players, player, card, $me)) {
             return;
         }
 
@@ -53,7 +44,7 @@
     };
 
     const reOrderPlayers = (players) => {
-        const iam = players.find((p) => p.name == me);
+        const iam = players.find((p) => p.name == $me);
         const west = players.find((p) => p.team != iam.team && p.pos == (iam.pos + 1 > 3 ? 0 : iam.pos + 1));
 
         return [
@@ -70,18 +61,18 @@
     {#if game.nbPlis >= 8}
         <GameCount {game} {gameRef} {players}/>
     {:else}
-        {#if me && isPlayer(players, me)}
+        {#if $me && isPlayer(players)}
         <div id="players" class:deal-complete={game.dealComplete}>
             {#each reOrderPlayers(players) as player, i}
-                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:big={$bigCards} class:hide-on-med-and-down={!game.dealComplete && me !== player.name} class:player-turn={game.currentPlayer == player.name}>
+                <div class="player-wrap {player.team} {['south', 'west', 'north', 'east'][i]}" class:big={$bigCards} class:hide-on-med-and-down={!game.dealComplete && $me !== player.name} class:player-turn={game.currentPlayer == player.name}>
                     <div>
                         {player.name} {#if game.currentPlayer == player.name}*{/if}
-                        {#if me == player.name}
+                        {#if $me == player.name}
                         <div>
                             <ul id="player-menu" class="dropdown-content">
                                 <li><button>Fermer</button></li>
                                 <li><button on:click={() => bigCards.set(!$bigCards)}>{$bigCards ? 'Petites' : 'Grandes'} cartes</button></li>
-                                <li><button type="button" on:click={() => me = null}>Je ne suis pas {player.name} !</button></li>
+                                <li><button type="button" on:click={() => me.set(null)}>Je ne suis pas {player.name} !</button></li>
                             </ul>
                             <button id="player-menu-trigger" class="dropdown-trigger " data-target="player-menu">⚙</button>
                         </div>
@@ -92,8 +83,8 @@
                     </div>
                     <div class="player-cards">
                         {#each sortCards(player.cards, game.atout) as card}
-                            {#if me == player.name}
-                                <Card {card} big={$bigCards} playable={IsCardPlayable(game, players, player, card, me)} on:click={play(game, gameRef, player, card, players)} />
+                            {#if $me == player.name}
+                                <Card {card} big={$bigCards} playable={IsCardPlayable(game, players, player, card, $me)} on:click={play(game, gameRef, player, card, players)} />
                             {:else}
                                 <div class="playing-card playing-card-hidden" class:big={$bigCards}></div>
                             {/if}
@@ -115,7 +106,7 @@
                 <div class="row">
                     {#each players as player}
                         <div class="col s3 center-align">
-                            <button class="btn waves-effect waves-light" on:click={setPlayer(player)}>{player.name}</button>
+                            <button class="btn waves-effect waves-light" on:click={() => me.set(player.name)}>{player.name}</button>
                         </div>
                     {/each}
                 </div>

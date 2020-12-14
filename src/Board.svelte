@@ -3,7 +3,7 @@
     import { getOneCard, suits } from './DeckManager.js';
     import { createGame, dealPreGame, dealRest, handleBelote } from './GameManager.js';
     import { findBestCard, countPointsInPli } from './PliManager.js';
-    import { bigCards } from './stores.js';
+    import { me, bigCards } from './stores.js';
     import Card from './Card.svelte';
 
     export let game;
@@ -16,24 +16,23 @@
     onMount(() => M.AutoInit());
 
     let atout;
-    let me = localStorage.getItem('me');
     const setTaker = () => {
-        dealRest(me, players, game).then(() => {
+        dealRest($me, players, game).then(() => {
             const belote = handleBelote(players, atout || game.takeableCard.suit);
-            gameRef.update({deck: game.deck, dealComplete: true, taker: me, atout: atout || game.takeableCard.suit, belote});
+            gameRef.update({deck: game.deck, dealComplete: true, taker: $me, atout: atout || game.takeableCard.suit, belote});
         });
     };
 
     const pickUp = () => {
         const currentBoard = game.board;
-        const team = players.find((p) => p.name == me).team;
+        const team = players.find((p) => p.name == $me).team;
         const plis = game[team] || [];
         const points = countPointsInPli(currentBoard, game.atout, (game.nbPlis + 1) == 8);
 
         game.score[team] += points;
         plis.push(JSON.stringify(currentBoard));
 
-        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: me, board: [], nbPlis: game.nbPlis + 1, toPick: false, score: game.score});
+        gameRef.update({[team]: plis, lastPli: currentBoard, currentPlayer: $me, board: [], nbPlis: game.nbPlis + 1, toPick: false, score: game.score});
     };
 
     let iCanPickup;
@@ -45,7 +44,7 @@
             // .slice(), [...array], $.extend did not work
             const bestCard = findBestCard(JSON.parse(JSON.stringify(game.board)), game.atout);
 
-            iCanPickup = me == bestCard.player;
+            iCanPickup = $me == bestCard.player;
         } else {
             iCanPickup = false;
         }
@@ -80,11 +79,11 @@
     }
 
     const findPlayerPos = (name) => {
-        if (name == me) {
+        if (name == $me) {
             return 'south';
         }
 
-        const iam = players.find((p) => p.name == me);
+        const iam = players.find((p) => p.name == $me);
         const mate = players.find((p) => p.team == iam.team && p.name != iam.name);
 
         if (mate.name == name) {
@@ -121,7 +120,7 @@
                 <Card {card} big={$bigCards} pos={findPlayerPos(card.player)}>
                     <p class="played-card-player">{card.player}</p>
                     <div slot="cancel" class="cancel-card">
-                    {#if me == card.player}
+                    {#if $me == card.player}
                         <button on:click={cancelCard(card)} class="btn-cancel-card" title="Reprendre la carte">&times;</button>
                     {/if}
                     </div>
