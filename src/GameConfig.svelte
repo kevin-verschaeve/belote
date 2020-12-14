@@ -67,11 +67,11 @@
                         <div class="card grey lighten-5">
                             <div class="card-content relative">
                                 <span class="card-title">{player.name}</span>
-                                <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                                <button on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</button>
                             </div>
                             <div class="card-action">
-                                <a on:click={addToTeam('NS', player)} class="black-text">Équipe 1</a>
-                                <a on:click={addToTeam('EW', player)} class="black-text">Équipe 2</a>
+                                <button on:click={addToTeam('NS', player)} class="black-text pointer">Équipe 1</button>
+                                <button on:click={addToTeam('EW', player)} class="black-text pointer">Équipe 2</button>
                             </div>
                         </div>
                     </div>
@@ -88,10 +88,10 @@
                                 <div class="card grey lighten-5">
                                     <div class="card-content relative">
                                         <span class="card-title">{player.name}</span>
-                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                                        <button on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</button>
                                     </div>
                                     <div class="card-action black-text">
-                                        <a on:click={addToTeam('EW', player)} class="black-text pointer">Changer d'équipe</a>
+                                        <button on:click={addToTeam('EW', player)} class="black-text pointer">Changer d'équipe</button>
                                     </div>
                                 </div>
                             </div>
@@ -108,10 +108,10 @@
                                 <div class="card grey lighten-5">
                                     <div class="card-content relative">
                                         <span class="card-title">{player.name}</span>
-                                        <a on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</a>
+                                        <button on:click={() => player.ref.delete()} title="Supprimer le joueur" class="btn-remove-player">&times;</button>
                                     </div>
                                     <div class="card-action">
-                                        <a on:click={addToTeam('NS', player)} class="black-text pointer">Changer d'équipe</a>
+                                        <button on:click={addToTeam('NS', player)} class="black-text pointer">Changer d'équipe</button>
                                     </div>
                                 </div>
                             </div>
